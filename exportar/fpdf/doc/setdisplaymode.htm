@@ -1,0 +1,47 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<TITLE>SetDisplayMode</TITLE>
+<LINK TYPE="text/css" REL="stylesheet" HREF="fpdf.css">
+</HEAD>
+<BODY>
+<H2>SetDisplayMode</H2>
+<TT>SetDisplayMode(<B>mixed</B> zoom [, <B>string</B> layout])</TT>
+<H4 CLASS='st'>Versão</H4>
+1.2
+<H4 CLASS='st'>Descrição</H4>
+Define a maneira que o original deve ser mostrado pelo visualizador.  O nível de zoom pode ser ajustado: as
+páginas podem ser mostradas inteiramente na tela, ocupar a largura total da janela, usar o tamanho real, serem
+mostradas em escala por um fator de zoom ou usando o padrão do visualizador (configurarado no menu
+Preferências do Acrobat). A disposição de página também pode ser especificada: uma por vez, página contínua,
+duas colunas ou padrão do visualizador.
+<BR>
+Por padrão, os documentos usam a modo que ocupa a largura total da janela com página contínua.
+<H4 CLASS='st'>Parâmetros</H4>
+<TT><U>zoom</U></TT>
+<BLOCKQUOTE>
+O tipo de zoom a ser usado. Pode ser um dos seguintes valores:
+<UL>
+<LI><TT>fullpage</TT>: mostra a página em tela cheia
+<LI><TT>fullwidth</TT>: usa a largura máxima da janela
+<LI><TT>real</TT>: usa o tamanho real (equivale a 100% de zoom)
+<LI><TT>default</TT>: usa o valor padrão do visualizador
+</UL>
+ou um número que indica o fator de zoom a ser usado.
+</BLOCKQUOTE>
+<TT><U>layout</U></TT>
+<BLOCKQUOTE>
+O formato da página. Os valores possíveis são:
+<UL>
+<LI><TT>single</TT>: mostra uma página por vez
+<LI><TT>continuous</TT>: mostra páginas contínuas
+<LI><TT>two</TT>: mostra duas páginas em duas colunas
+<LI><TT>default</TT>: usa o valor padrão do visualizador
+</UL>
+O valor padrão é <TT>continuous</TT>.
+</BLOCKQUOTE>
+<H6></H6>
+<HR>
+<DIV ALIGN="CENTER"><A HREF="index.htm">Índice</A></DIV>
+</BODY>
+</HTML>

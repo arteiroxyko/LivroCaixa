@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<TITLE>Cell</TITLE>
+<LINK TYPE="text/css" REL="stylesheet" HREF="fpdf.css">
+</HEAD>
+<BODY>
+<H2>Cell</H2>
+<TT>Cell(<B>float</B> w [, <B>float</B> h [, <B>string</B> txt [, <B>mixed</B> border [, <B>int</B> ln [, <B>string</B> align [, <B>int</B> fill [, <B>mixed</B> link]]]]]]])</TT>
+<H4 CLASS='st'>Versão</H4>
+1.0
+<H4 CLASS='st'>Descrição</H4>
+Imprime uma célula (área retangular) com bordas opcionais, cor de fundo e texto.
+O canto superior-esquerdo da célula corresponde à posição atual. O texto pode ser alinhado
+ou centralizado. Depois de chamada, a posição atual se move para a direita ou para a linha
+seguinte. É possível pôr um link no texto.
+<BR>
+Se a quebra de página automática está habilitada e a pilha for além do limite, uma quebra de
+página é feita antes da impressão.
+<H4 CLASS='st'>Parâmetros</H4>
+<TT><U>w</U></TT>
+<BLOCKQUOTE>
+Largura da célula. Se <TT>0</TT>, a célula se extende até a margem direita.
+</BLOCKQUOTE>
+<TT><U>h</U></TT>
+<BLOCKQUOTE>
+Altura da célula.
+Valor padrão: <TT>0</TT>.
+</BLOCKQUOTE>
+<TT><U>txt</U></TT>
+<BLOCKQUOTE>
+Texto a ser impresso.
+Valor padrão: texto vazio.
+</BLOCKQUOTE>
+<TT><U>border</U></TT>
+<BLOCKQUOTE>
+Indica se as bordas devem ser desenhadas em volta da célula. O valor deve ser um número:
+<UL>
+<LI><TT>0</TT>: sem borda
+<LI><TT>1</TT>: com borda
+</UL>
+ou um texto contendo alguns ou todos os seguintes caracteres (em qualquer ordem):
+<UL>
+<LI><TT>L</TT>: esquerda
+<LI><TT>T</TT>: acima
+<LI><TT>R</TT>: direita
+<LI><TT>B</TT>: abaixo
+</UL>
+Valor padrão: <TT>0</TT>.
+</BLOCKQUOTE>
+<TT><U>ln</U></TT>
+<BLOCKQUOTE>
+Indica onde a posição corrente deve ficar depois que a função for chamada. Os valores possíveis são:
+<UL>
+<LI><TT>0</TT>: a direita
+<LI><TT>1</TT>: no início da próxima linha
+<LI><TT>2</TT>: abaixo
+</UL>
+Usar o valor <TT>1</TT> é equivalente a usar <TT>0</TT> e chamar a função Ln() logo após.
+Valor padrão: <TT>0</TT>.
+</BLOCKQUOTE>
+<TT><U>align</U></TT>
+<BLOCKQUOTE>
+Permite centralizar ou alinhar o texto. Os valores possíveis são:
+<UL>
+<LI><TT>L</TT> ou um texto vazio: alinhado à esquerda (valor padrão)
+<LI><TT>C</TT>: centralizado
+<LI><TT>R</TT>: alinhado à direita
+</UL>
+</BLOCKQUOTE>
+<TT><U>fill</U></TT>
+<BLOCKQUOTE>
+Indica se o fundo da célula deve ser preenchido (<TT>1</TT>) ou transparente (<TT>0</TT>).
+Valor padrão: <TT>0</TT>.
+</BLOCKQUOTE>
+<TT><U>link</U></TT>
+<BLOCKQUOTE>
+URL ou identificador retornado por AddLink().
+</BLOCKQUOTE>
+<H4 CLASS='st'>Exemplo</H4>
+<TABLE WIDTH="100%" BGCOLOR="#E0E0E0"><TR><TD>
+<TT>
+//Escolhe a fonte<BR>
+$pdf-&gt;SetFont('Arial','B',16);<BR>
+//Move para 8 cm a direita<BR>
+$pdf-&gt;Cell(80);<BR>
+//Texto centralizado em uma célula de 20*10 mm com borda e quebra de linha<BR>
+$pdf-&gt;Cell(20,10,'Title',1,1,'C');
+</TT>
+</TD></TR></TABLE><BR>
+<H4 CLASS='st'>Veja também</H4>
+<A HREF="setfont.htm">SetFont()</A>,
+<A HREF="setdrawcolor.htm">SetDrawColor()</A>,
+<A HREF="setfillcolor.htm">SetFillColor()</A>,
+<A HREF="settextcolor.htm">SetTextColor()</A>,
+<A HREF="setlinewidth.htm">SetLineWidth()</A>,
+<A HREF="addlink.htm">AddLink()</A>,
+<A HREF="ln.htm">Ln()</A>,
+<A HREF="multicell.htm">MultiCell()</A>,
+<A HREF="write.htm">Write()</A>,
+<A HREF="setautopagebreak.htm">SetAutoPageBreak()</A>.
+<H6></H6>
+<HR>
+<DIV ALIGN="CENTER"><A HREF="index.htm">Índice</A></DIV>
+</BODY>
+</HTML>

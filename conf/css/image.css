@@ -1,0 +1,14 @@
+/* Estilo da imagem de para voltar ao topo da pagina */
+#scrollUp {
+    background-image: url("../../conf/img/topo.png");
+    bottom: 40px;
+    right: 100px;	/* distância do botão em relação a lateral do navegador */
+    width: 37px;    /* largura da imagem */
+    height: 37px;   /* altura da imagem */
+    text-align: center; /* posição do texto, opções: left, center, right */
+    text-decoration: none;
+}
+
+#scrollUp:hover {
+    margin-bottom: 1;
+}

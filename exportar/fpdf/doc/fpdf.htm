@@ -1,0 +1,57 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<TITLE>FPDF</TITLE>
+<LINK TYPE="text/css" REL="stylesheet" HREF="fpdf.css">
+</HEAD>
+<BODY>
+<H2>FPDF</H2>
+<TT>FPDF([<B>string</B> orientation [, <B>string</B> unit [, <B>mixed</B> format]]])</TT>
+<H4 CLASS='st'>Versão</H4>
+1.0
+<H4 CLASS='st'>Descrição</H4>
+Esta é o construtor da classe. Ele permite que seja definido o formato da página, a orientação
+e a unidade de medida usada em todos os métodos (exeto para tamanhos de fonte).
+<H4 CLASS='st'>Parâmetros</H4>
+<TT><U>orientation</U></TT>
+<BLOCKQUOTE>
+Orientação padrão da página. Os valores possíveis são (diferenciando maiúsculas e minúsculas):
+<UL>
+<LI><TT>P</TT> or <TT>Retrato</TT>
+<LI><TT>L</TT> or <TT>Paisagem</TT>
+</UL>
+O valor padrão é <TT>P</TT>.
+</BLOCKQUOTE>
+<TT><U>unit</U></TT>
+<BLOCKQUOTE>
+Unidade de medida do usuário. Os valores possíveis são:
+<UL>
+<LI><TT>pt</TT>: pontos
+<LI><TT>mm</TT>: millímetros
+<LI><TT>cm</TT>: centímetros
+<LI><TT>in</TT>: polegadas
+</UL>
+Um ponto é igual a 1/72 polegadas, isto é o mesmo que 0.35 mm (uma polegada são 2.54 cm).
+Ista é uma unidade muito comum em tipografia; os tamanhos das fontes são medidos por esta unidade.
+<BR>
+<BR>
+O valor padrão é <TT>mm</TT>.
+</BLOCKQUOTE>
+<TT><U>format</U></TT>
+<BLOCKQUOTE>
+O formato usado pelas páginas. Pode ser um dos seguintes valores (diferenciando maiúsculas e minúsculas):
+<UL>
+<LI><TT>A3</TT>
+<LI><TT>A4</TT>
+<LI><TT>A5</TT>
+<LI><TT>Letter</TT>
+<LI><TT>Legal</TT>
+</UL>
+ou um valor personalizado na forma de um array com dois elementos contendo a largura e a
+altura (expressas na unidade obtida por <TT>unit</TT>).
+</BLOCKQUOTE>
+<H6></H6>
+<HR>
+<DIV ALIGN="CENTER"><A HREF="index.htm">Índice</A></DIV>
+</BODY>
+</HTML>

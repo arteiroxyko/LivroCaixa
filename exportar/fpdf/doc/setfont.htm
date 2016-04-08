@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<TITLE>SetFont</TITLE>
+<LINK TYPE="text/css" REL="stylesheet" HREF="fpdf.css">
+</HEAD>
+<BODY>
+<H2>SetFont</H2>
+<TT>SetFont(<B>string</B> family [, <B>string</B> style [, <B>float</B> size]])</TT>
+<H4 CLASS='st'>Versão</H4>
+1.0
+<H4 CLASS='st'>Descrição</H4>
+Define a fonte que será usada para imprimir os caracteres de texto. É obrigatória a chamada,
+ao menos uma vez, deste método antes de imprimir o texto ou o documento resultante não será válido.
+<BR>
+A fonte pode ser uma padrão ou uma que foi adicionada através do método AddFont().  As fontes
+padrão usam codificação Windows cp1252 (Europa ocidental).
+<BR>
+O método pode ser chamado antes que a primeira página esteja criada e a fonte será mantida
+de uma página para outra.
+<BR>
+Se você quiser mudar o tamanho da fonte atual, é mais simples chamar SetFontSize().
+<BR>
+<BR>
+<B>Nota: </B>para as fontes padrão, os arquivos de definição das fontes devem estar acessíveis.
+Há três possibilidades para isto:
+<BR>
+<BR>
+<UL>
+<LI>Eles estão no diretório atual (o mesmo aonde o script está rodando)
+<BR>
+<LI>Eles estão em um dos diretórios definidos pelo parâmetro <TT>include_path</TT>
+<BR>
+Eles estão no diretório definido pela constante <TT>FPDF_FONTPATH</TT>
+</UL>
+Exemplo para o último caso (observe a barra no final):
+<BR>
+<BR>
+<TABLE WIDTH="100%" BGCOLOR="#E0E0E0"><TR><TD>
+<TT>
+define('FPDF_FONTPATH','/home/www/font/');<BR>
+require('fpdf.php');
+</TT>
+</TD></TR></TABLE><BR>
+
+Se o arquivo que corresponde à fonte solicitada não existir, o erro "Could not include
+font metric file" (não foi possível incluir o arquivo de fonte) é gerado.
+<H4 CLASS='st'>Parâmetros</H4>
+<TT><U>family</U></TT>
+<BLOCKQUOTE>
+Família da fonte. Pode ser um tanto nome definido por AddFont() como uma das famílias padrão
+(maiúsculas e minúsculas não são diferenciadas):
+<UL>
+<LI><TT>Courier</TT> (largura fixa)
+<LI><TT>Helvetica<TT> ou </TT>Arial</TT> (sinônimos; sans serif)
+<LI><TT>Times</TT> (serif)
+<LI><TT>Symbol</TT> (símbolos)
+<LI><TT>ZapfDingbats</TT> (símbolos)
+</UL>
+Também é possível passar um texto vazio. Neste caso, a família corrente é mantida.
+</BLOCKQUOTE>
+<TT><U>style</U></TT>
+<BLOCKQUOTE>
+Estilo da fonte. Os valores possíveis são (maiúsculas e minúsculas são diferenciadas):
+<UL>
+<LI>texto vazio: normal
+<LI><TT>B</TT>: negrito
+<LI><TT>I</TT>: itálico
+<LI><TT>U</TT>: sublinhado
+</UL>
+ou qualquer combinação. O valor padrão é normal.
+Os estilos negrito e itálico não são aplicáveis às fontes <TT>Symbol</TT> e <TT>ZapfDingbats</TT>.
+</BLOCKQUOTE>
+<TT><U>size</U></TT>
+<BLOCKQUOTE>
+Tamanho da fonte em pontos.
+<BR>
+O valor padrão é o tamanho atual. Se nenhum tamanho foi especificado desde o início do
+documento, o valor usado é 12.
+</BLOCKQUOTE>
+<H4 CLASS='st'>Exemplo</H4>
+<TABLE WIDTH="100%" BGCOLOR="#E0E0E0"><TR><TD>
+<TT>
+//Times normal 12<BR>
+$pdf-&gt;SetFont('Times');<BR>
+//Arial negrito 14<BR>
+$pdf-&gt;SetFont('Arial','B',14);<BR>
+//Remove negrito<BR>
+$pdf-&gt;SetFont('');<BR>
+//Times negrito, itálico e sublinhado 14<BR>
+$pdf-&gt;SetFont('Times','BIU');
+</TT>
+</TD></TR></TABLE><BR>
+<H4 CLASS='st'>Veja também</H4>
+<A HREF="addfont.htm">AddFont()</A>,
+<A HREF="setfontsize.htm">SetFontSize()</A>,
+<A HREF="cell.htm">Cell()</A>,
+<A HREF="multicell.htm">MultiCell()</A>,
+<A HREF="write.htm">Write()</A>.
+<H6></H6>
+<HR>
+<DIV ALIGN="CENTER"><A HREF="index.htm">Índice</A></DIV>
+</BODY>
+</HTML>

@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<TITLE>Image</TITLE>
+<LINK TYPE="text/css" REL="stylesheet" HREF="fpdf.css">
+</HEAD>
+<BODY>
+<H2>Image</H2>
+<TT>Image(<B>string</B> file, <B>float</B> x, <B>float</B> y [, <B>float</B> w [, <B>float</B> h [, <B>string</B> type [, <B>mixed</B> link]]]])</TT>
+<H4 CLASS='st'>Versão</H4>
+1.1
+<H4 CLASS='st'>Descrição</H4>
+Coloca uma imagem na p&aacute;gina. O canto superior-esquerdo deve ser informado. As dimens&otilde;es
+podem ser especificadas de diferentes formas:
+<UL>
+<LI>largura e altura (informadas na unidade selecionada pelo usu&aacute;rio)
+<LI>uma dimens&atilde;o, a outra ser&aacute; calculada automaticamente de forma a manter a
+propor&ccedil;&atilde;o original
+<LI>sem dimens&otilde;es, neste caso a imagem ser&aacute; colocada em 72 dpi
+</UL>
+Os formatos suportados s&atilde;o JPEG e PNG.
+<BR>
+<BR>
+Para JPEG, todos os tipos s&atilde;o permitidos:
+<UL>
+<LI>gray scales (tons de cinza)
+<LI>true colors (24 bits)
+<LI>CMYK (32 bits)
+</UL>
+Para PNG, s&atilde;o permitidos:
+<UL>
+<LI>tons de cinza com pelo menos 8 bits (256 n&iacite;veis)
+<LI>cores indexadas
+<LI>true colors (24 bits)
+</UL>
+mas n&atilde;o s&atilde;o suportados:
+<UL>
+<LI>Interlacing
+<LI>Alpha channel
+</UL>
+Se uma cor transparente &eacute; definida, ela vai ser levada em conta (mas s&oacute; ser&aacute;
+interpretada pelo Acrobat 4 e vers&otilde;es superiores).
+<BR>
+O formato pode ser especificado ou inferido pela extens&atilde;o do arquivo.
+<BR>
+&Eacute; poss&iacute;vel colocar um link na imagem.
+<BR>
+<BR>
+Nota: se a mesma imagem &eacute; usada v&aacute;rias vezes, s&oacute; uma c&oacute;pia vai ser embutida no arquivo.
+<H4 CLASS='st'>Parâmetros</H4>
+<TT><U>file</U></TT>
+<BLOCKQUOTE>
+Nome do arquivo que cont&eacute;m a imagem.
+</BLOCKQUOTE>
+<TT><U>x</U></TT>
+<BLOCKQUOTE>
+Abscissa do canto superior-esquerdo.
+</BLOCKQUOTE>
+<TT><U>y</U></TT>
+<BLOCKQUOTE>
+Ordenada do canto superio-esquerdo.
+</BLOCKQUOTE>
+<TT><U>w</U></TT>
+<BLOCKQUOTE>
+Largura da imagem na p&aacute;gina. Se n&atilde;o informada ou zero, ela ser&aacute; calculada
+automaticamente.
+</BLOCKQUOTE>
+<TT><U>h</U></TT>
+<BLOCKQUOTE>
+Altura da imagem na p&aacute;gina. Se n&atilde;o informada ou zero, ele ser&aacute; calculada
+automaticamente.
+</BLOCKQUOTE>
+<TT><U>type</U></TT>
+<BLOCKQUOTE>
+Formato da imagem. Os poss&iacute;veis valores s&atilde;o (diferenciando mai&uacute;sculas e min&uacute;sculas):
+<TT>JPG</TT>, <TT>JPEG</TT>, <TT>PNG</TT>.
+Se n&atilde;o informado, o tipo ser&aacute; inferido pela extens&atilde;o do arquivo.
+</BLOCKQUOTE>
+<TT><U>link</U></TT>
+<BLOCKQUOTE>
+URL ou identificador retornado pela fun&ccedil;&atilde;o AddLink().
+</BLOCKQUOTE>
+<H4 CLASS='st'>Veja também</H4>
+<A HREF="addlink.htm">AddLink()</A>.
+<H6></H6>
+<HR>
+<DIV ALIGN="CENTER"><A HREF="index.htm">Índice</A></DIV>
+</BODY>
+</HTML>

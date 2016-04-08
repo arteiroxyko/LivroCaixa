@@ -1,0 +1,42 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<TITLE>Header</TITLE>
+<LINK TYPE="text/css" REL="stylesheet" HREF="fpdf.css">
+</HEAD>
+<BODY>
+<H2>Header</H2>
+<TT>Header()</TT>
+<H4 CLASS='st'>Versão</H4>
+1.0
+<H4 CLASS='st'>Descrição</H4>
+Este método é usado gerar o cabeçalho da página. É chamado automaticamente por AddPage()
+e não deve ser chamado diretamente pela aplicação. A implementação em FPDF está vazia,
+então você precisa criar uma subclasse dele para sobrepor o método se você quiser um
+processamento específico para o cabeçalho.
+<H4 CLASS='st'>Exemplo</H4>
+<TABLE WIDTH="100%" BGCOLOR="#E0E0E0"><TR><TD>
+<TT>
+class PDF extends FPDF<BR>
+{<BR>
+function Header()<BR>
+{<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;//Seleciona fonte Arial bold 15<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;$this-&gt;SetFont('Arial','B',15);<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;//Move para a direita<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;$this-&gt;Cell(80);<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;//Titulo dentro de uma caixa<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;$this-&gt;Cell(30,10,'Title',1,0,'C');<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;//Quebra de linha<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;$this-&gt;Ln(20);<BR>
+}<BR>
+}
+</TT>
+</TD></TR></TABLE><BR>
+<H4 CLASS='st'>Veja também</H4>
+<A HREF="footer.htm">Footer()</A>.
+<H6></H6>
+<HR>
+<DIV ALIGN="CENTER"><A HREF="index.htm">Índice</A></DIV>
+</BODY>
+</HTML>

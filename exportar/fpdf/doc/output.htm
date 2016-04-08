@@ -1,0 +1,47 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<TITLE>Output</TITLE>
+<LINK TYPE="text/css" REL="stylesheet" HREF="fpdf.css">
+</HEAD>
+<BODY>
+<H2>Output</H2>
+<TT><B>string</B> Output([<B>string</B> name [, <B>string</B> dest]])</TT>
+<H4 CLASS='st'>Versão</H4>
+1.0
+<H4 CLASS='st'>Descrição</H4>
+Envia o documento para o destino informado: string, arquivo local ou browser. No &uacute;ltimo caso,
+o plug-in ser&aacute; usado (se presente) ou um download (caixa de di&aacute;logo "Salvar como") ser&aacute; mostrada.
+<BR>
+O m&eacute;todo chama primeiro a fun&ccedil;&atilde;o Close() se necess&aacute;rio para finalizar o documento.
+<H4 CLASS='st'>Parâmetros</H4>
+<TT><U>name</U></TT>
+<BLOCKQUOTE>
+O nome do arquivo. Se n&atilde;o for informado, o documento vai ser enviado para o browser
+(destino <TT>I</TT>) com o nome <TT>doc.pdf</TT>.
+</BLOCKQUOTE>
+<TT><U>dest</U></TT>
+<BLOCKQUOTE>
+Destino para onde o documento ser&aacute; enviado. Pode ser um dos seguintes valores:
+<UL>
+<LI><TT>I</TT>: envia o arquivo diretamente para o browser. Se o plug-in estiver instalado ele ser&aacute; usado.
+O nome indicado pelo por <TT>name</TT> e &aacute; usado quando se usa a op&ccedil;o "Salvar destino como" no
+link que gera o PDF.
+<LI><TT>D</TT>: envia para o browser e for&ccedil;a o download do arquivo com o nome indicado por
+<TT>name</TT>.
+<LI><TT>F</TT>: salva em um arquivo local com o nome informado em <TT>name</TT>.
+<LI><TT>S</TT>: retorna o documento como uma string. o <TT>name</TT> &eacute; ignorado.
+</UL>
+Se o parametro n&atilde;o &eacute; informado mas um nome &eacute; informado, o destino ser&aacute; <TT>F</TT>.
+Se nenhum parametro for especificado, o destino ser&aacute; <TT>I</TT>.<BR>
+<BR>
+Nota: para manter a compatibilidade com a vers&atilde;o anterior, um valor l&oacute;gico tamb&eacute;m &eacute; aceito
+(<TT>false</TT> para <TT>F</TT> e <TT>true</TT> para <TT>D</TT>).
+</BLOCKQUOTE>
+<H4 CLASS='st'>Veja também</H4>
+<A HREF="close.htm">Close()</A>.
+<H6></H6>
+<HR>
+<DIV ALIGN="CENTER"><A HREF="index.htm">Índice</A></DIV>
+</BODY>
+</HTML>

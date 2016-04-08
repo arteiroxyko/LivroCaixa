@@ -1,0 +1,43 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<TITLE>AddPage</TITLE>
+<LINK TYPE="text/css" REL="stylesheet" HREF="fpdf.css">
+</HEAD>
+<BODY>
+<H2>AddPage</H2>
+<TT>AddPage([<B>string</B> orientation])</TT>
+<H4 CLASS='st'>Versão</H4>
+1.0
+<H4 CLASS='st'>Descrição</H4>
+Adiciona uma página nova ao documento. Se uma página já existir, o método de Footer() é
+chamado antes para saída do rodapé. Então a página é adicionada, a posição atual é ajustada
+ao canto superior-esquerdo de acordo com as margens esquerdas e superiores, e Header() é
+chamado para montar o cabeçalho.
+<BR>
+A fonte que foi ajustada antes de chamar é restaurada automaticamente. Não há nenhuma
+necessidade chamar outra vez SetFont() se você quiser continuar com a mesma fonte. O
+mesmo é verdadeiro para cores e largura da linha.
+<BR>
+A origem do sistema de coordenadas está no de canto superior-esquerdo e as ordenadas cescem
+para baixo.
+<H4 CLASS='st'>Parâmetros</H4>
+<TT><U>orientation</U></TT>
+<BLOCKQUOTE>
+Orientação da página. Os valores possíveis são (diferenciando maiúsculas e minúsculas):
+<UL>
+<LI><TT>P</TT> or <TT>Portrait</TT>
+<LI><TT>L</TT> or <TT>Landscape</TT>
+</UL>
+O valor padrão é o que foi passado ao construtor.
+</BLOCKQUOTE>
+<H4 CLASS='st'>Veja também</H4>
+<A HREF="fpdf.htm">FPDF()</A>,
+<A HREF="header.htm">Header()</A>,
+<A HREF="footer.htm">Footer()</A>,
+<A HREF="setmargins.htm">SetMargins()</A>.
+<H6></H6>
+<HR>
+<DIV ALIGN="CENTER"><A HREF="index.htm">Índice</A></DIV>
+</BODY>
+</HTML>

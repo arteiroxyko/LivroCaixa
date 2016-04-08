@@ -1,0 +1,63 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<TITLE>AddFont</TITLE>
+<LINK TYPE="text/css" REL="stylesheet" HREF="fpdf.css">
+</HEAD>
+<BODY>
+<H2>AddFont</H2>
+<TT>AddFont(<B>string</B> family [, <B>string</B> style [, <B>string</B> file]])</TT>
+<H4 CLASS='st'>Versão</H4>
+1.5
+<H4 CLASS='st'>Descrição</H4>
+Importa uma fonte TrueType ou Type1 e a deixa disponível.  Antes, é preciso gerar
+um arquivo de definição de fonte com a ferramenta makefont.php.
+<BR>
+O arquivo de definição (e o próprio arquivo de fonte quando embutido) deve estar no diretório atual
+ou em um indicado por <TT>FPDF_FONTPATH</TT> se esta constante for definida.
+Se não for encontrado, o erro "Could not include font definition file" (Não foi possível incluir o
+arquivo de definição de fonte) é gerado.
+<H4 CLASS='st'>Parâmetros</H4>
+<TT><U>family</U></TT>
+<BLOCKQUOTE>
+Família da fonte. O nome pode ser escolhido arbitrariamente. Se for um nome de família padrão
+ele irá sobrepor a fonte correspondente.
+</BLOCKQUOTE>
+<TT><U>style</U></TT>
+<BLOCKQUOTE>
+Estilo da fonte. Os valores possíveis são (maiúsculas e minúsculas são diferenciadas):
+<UL>
+<LI>empty string: regular
+<LI><TT>B</TT>: bold
+<LI><TT>I</TT>: italic
+<LI><TT>BI</TT> or <TT>IB</TT>: bold italic
+</UL>
+O valor padrão é regular.
+</BLOCKQUOTE>
+<TT><U>file</U></TT>
+<BLOCKQUOTE>
+O arquivo de definição da fonte.
+<BR>
+Por padrão, o nome é composto pelo nome da fonte e o estilo, em minúsculas sem espaços.
+</BLOCKQUOTE>
+<H4 CLASS='st'>Exemplo</H4>
+<TABLE WIDTH="100%" BGCOLOR="#E0E0E0"><TR><TD>
+<TT>
+$pdf-&gt;AddFont('Comic','I');
+</TT>
+</TD></TR></TABLE><BR>
+é equivalente a:
+<BR>
+<BR>
+<TABLE WIDTH="100%" BGCOLOR="#E0E0E0"><TR><TD>
+<TT>
+$pdf-&gt;AddFont('Comic','I','comici.php');
+</TT>
+</TD></TR></TABLE><BR>
+<H4 CLASS='st'>Veja também</H4>
+<A HREF="setfont.htm">SetFont()</A>.
+<H6></H6>
+<HR>
+<DIV ALIGN="CENTER"><A HREF="index.htm">Índice</A></DIV>
+</BODY>
+</HTML>
