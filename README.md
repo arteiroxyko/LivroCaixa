@@ -1,5 +1,5 @@
 
-Livro Caixa
+Livro Caixa Simples
 
 Gestão de finanças com este aplicativo simples.
 
