@@ -1,21 +1,12 @@
-////////////////////////
-//LIVRO CAIXA SIMPLES//
-//////////////////////
+
+Livro Caixa
+
+Gest√£o de finan√ßas com este aplicativo simples.
+
+Para instalar o sistema:
+Importe o arquivo lc-db-install.sql para que sejam criadas as tabelas para o banco de dados da aplica√ß√£o.
+Altere do arquivo config.php que est√° na pasta conf/config.php com os dados do seu banco de dados.
 
 
-Para novos usu·rios do sistema:
-Importe o arquivo lc-db-install.sql para que seja criado o banco de dados da aplicaÁ„o.
-
-E substitua todos os arquivos, inclusive o config.php no seu servidor.
-
-De qalquer forma, lembre-se de realizar backup dos dados lanÁados no sistema, antes de ralizar a
-atualizaÁ„o.
-Fonte original dos arquivos
-
-http://www.paulocollares.com.br/2013/06/sistema-simples-de-livro-caixa-em-php/
-
-
-////////////////////////
-//LIVRO CAIXA SIMPLES//
-//////////////////////
+Fonte original dos arquivos neste [site](http://www.paulocollares.com.br/2013/06/sistema-simples-de-livro-caixa-em-php/)
 
