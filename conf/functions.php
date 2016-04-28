@@ -5,8 +5,8 @@ function formata_dinheiro($valor) {
     return "R$ " . $valor;
 }
 
-function mostraMes($m) {
-    switch ($m) {
+function mostraMes($mes) {
+    switch ($mes) {
         case 01: case 1: $mes = "Janeiro";
             break;
         case 02: case 2: $mes = "Fevereiro";
@@ -21,9 +21,9 @@ function mostraMes($m) {
             break;
         case 07: case 7: $mes = "Julho";
             break;
-        case 08: case 8: $mes = "Agosto";
+        case 8: $mes = "Agosto";
             break;
-        case 09: case 9: $mes = "Setembro";
+        case 9: $mes = "Setembro";
             break;
         case 10: $mes = "Outubro";
             break;

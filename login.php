@@ -160,12 +160,12 @@ $mensagem = "Boa noite";
 															<form id="formulario" method="post" action="cadastro.php">
 															<input type="hidden" name="acao" value="cadastrar" />
 															<b>Usuário:
-															</b> <input type="text" name="usuario" id="usuario" size="10" maxlength="15" /><br><br>
-															<b>Nome:</b> <input type="text" name="nome" id="nome" size="20" maxlength="100" />
-															<b>Sobrenome:</b> <input type="text" name="sobrenome" id="sobrenome" size="40" maxlength="100" />
+															</b> <font color="#FF0000" size=2><input type="text" name="usuario" id="usuario" size="10" maxlength="15" /></font><br><br>
+															<b>Nome:</b> <font color="#FF0000" size=2><input type="text" name="nome" id="nome" size="20" maxlength="100" /></font>
+															<b>Sobrenome:</b> <font color="#FF0000" size=2><input type="text" name="sobrenome" id="sobrenome" size="40" maxlength="100" /></font>
 															<br><br>
-															<b>Senha:</b> <input type="password" name="senha" id="senha" onkeyup="passwordStrength(this.value)"/>
-															<b>Confirmar:</b> <input type="password" name="senhaconf" id="senhaconf">&nbsp;
+															<b>Senha:</b> <font color="#FF0000" size=2><input type="password" name="senha" id="senha" onkeyup="passwordStrength(this.value)"/></font>
+															<b>Confirmar:</b> <font color="#FF0000" size=2><input type="password" name="senhaconf" id="senhaconf"></font>&nbsp;
 															<br>
 															<label for="passwordStrength"><font size=2>Força da senha</font></label><br>
 															<div id="passwordDescription"></div>

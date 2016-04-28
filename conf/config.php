@@ -11,14 +11,14 @@ header('Content-Type: text/html; charset=utf-8');
 $_SG['conectaServidor'] = true;    // Abrir uma conexão com o servidor MySQL?
 $_SG['abreSessao'] = true;         // Iniciar a sessão com um session_start()?
 $_SG['caseSensitive'] = false;     // Usar case-sensitive onde 'thiago' é diferente de 'THIAGO' na tela de login?
-$_SG['validaSempre'] = true;       // Evitar que, ao mudar os dados do usuário no banco de dados como a senha por exemplo, o mesmo contiue logado?
+$_SG['validaSempre'] = false;       // Evitar que, ao mudar os dados do usuário no banco de dados como a senha por exemplo, o mesmo contiue logado?
 
 // Informe os dados para conexão com o seu banco de dados.
 $_SG['servidor'] = 'localhost';    // Servidor MySQL
 $_SG['usuario'] = 'root';          // Usuário MySQL
-$_SG['senha'] = '';          // Senha MySQL
+$_SG['senha'] = 'thordb';          // Senha MySQL
 $_SG['banco'] = 'livrocaixa';         // Banco de dados MySQL
-$_SG['paginaLogin'] = 'login.php'; // Página de login
+$_SG['paginaLogin'] = './login.php'; // Página de login
 $_SG['tabela'] = 'usuarios';       // Nome da tabela do db onde os usuários são cadastrados.
 
 // ===============================
@@ -27,13 +27,13 @@ $_SG['tabela'] = 'usuarios';       // Nome da tabela do db onde os usuários sã
 
 // Verifica se precisa fazer a conexão com o MySQL
 if ($_SG['conectaServidor'] == true) {
-  $_SG['link'] = mysql_connect($_SG['servidor'], $_SG['usuario'], $_SG['senha']) or die("MySQL: Não foi possível conectar-se ao servidor.");
-  mysql_select_db($_SG['banco'], $_SG['link']) or die("MySQL: Não foi possível conectar-se ao banco de dados.");
-  mysql_query("SET NAMES 'utf8'");
-  mysql_query('SET character_set_connection=utf8');
-  mysql_query('SET character_set_client=utf8');
-  mysql_query('SET character_set_results=utf8');
+  $_SG['conexao'] = @mysqli_connect($_SG['servidor'], $_SG['usuario'], $_SG['senha'], $_SG['banco']) or die("MySQL: Não foi possível conectar-se ao servidor e ao banco de dados.");
+  mysqli_query($_SG['conexao'],"SET NAMES 'utf8'");
+  mysqli_query($_SG['conexao'],'SET character_set_connection=utf8');
+  mysqli_query($_SG['conexao'],'SET character_set_client=utf8');
+  mysqli_query($_SG['conexao'],'SET character_set_results=utf8');
 }
+
 // Verifica se precisa iniciar a sessão
 if ($_SG['abreSessao'] == true)
   session_start();
@@ -52,9 +52,8 @@ function validaUsuario($usuario, $senha) {
   $nusuario = addslashes($usuario);
   $nsenha = addslashes($senha);
   // Monta uma consulta SQL (query) para procurar um usuário compativel com os dados fornecidos na tela de login, e interpretar a criptografia SHA1.
-  $sql = "SELECT `id`, `nome`, `sobrenome` FROM `".$_SG['tabela']."` WHERE ".$cS." `usuario` = '".$nusuario."' AND ".$cS." `senha` = SHA1('".$nsenha."') LIMIT 1";
-  $query = mysql_query($sql);
-  $resultado = mysql_fetch_assoc($query);
+  $query = mysqli_query ($_SG['conexao'], "SELECT `id`, `nome`, `sobrenome` FROM `".$_SG['tabela']."` WHERE ".$cS." `usuario` = '".$nusuario."' AND ".$cS." `senha` = SHA2('".$nsenha."',512) LIMIT 1");
+  $resultado = mysqli_fetch_assoc ($query);
   // Verifica se encontrou algum registro
   if (empty($resultado)) {
     // Nenhum registro foi encontrado => o usuário é inválido

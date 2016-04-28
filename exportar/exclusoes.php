@@ -53,15 +53,15 @@ $pdf->SetTextColor(0,0,255);
 $pdf->Cell(19,1,utf8_decode("Relatório de exclusões de movimentos."),0,1,'C',0);
 $pdf->Ln(0.7);
 
-$qrv=mysql_query("SELECT * FROM exclusoes WHERE conta_mov='$conta' && usuario_mov='$usuario' ORDER By id DESC");
-if (mysql_num_rows($qrv)!==0){
+$qrv=mysqli_query($_SG['conexao'], "SELECT * FROM exclusoes WHERE conta_mov='$conta' && usuario_mov='$usuario' ORDER By id DESC");
+if (mysqli_num_rows($qrv)!==0){
 
-$qrg=mysql_query("SELECT SUM(valor_mov) as total FROM exclusoes WHERE tipo_mov=1 && conta_mov='$conta' && usuario_mov='$usuario'");
-$rowg=mysql_fetch_array($qrg);
+$qrg=mysqli_query($_SG['conexao'], "SELECT SUM(valor_mov) as total FROM exclusoes WHERE tipo_mov=1 && conta_mov='$conta' && usuario_mov='$usuario'");
+$rowg=mysqli_fetch_array($qrg);
 $entradas=$rowg['total'];
 
-$qrg=mysql_query("SELECT SUM(valor_mov) as total FROM exclusoes WHERE tipo_mov=0 && conta_mov='$conta' && usuario_mov='$usuario'");
-$rowg=mysql_fetch_array($qrg);
+$qrg=mysqli_query($_SG['conexao'], "SELECT SUM(valor_mov) as total FROM exclusoes WHERE tipo_mov=0 && conta_mov='$conta' && usuario_mov='$usuario'");
+$rowg=mysqli_fetch_array($qrg);
 $saidas=$rowg['total'];
 
 $entradasexc=formata_dinheiro($entradas);
@@ -77,12 +77,12 @@ $pdf->Cell(1.9,0.6,'Data',0,1,'L',1);
 
 //Exclusões
 $cont=0;
-while ($row=mysql_fetch_array($qrv)){
+while ($row=mysqli_fetch_array($qrv)){
 $cont++;
 
 $cat=$row['cat_mov'];
-$qr2=mysql_query("SELECT nome FROM categorias WHERE id='$cat'");
-$row2=mysql_fetch_array($qr2);
+$qr2=mysqli_query($_SG['conexao'], "SELECT nome FROM categorias WHERE id='$cat'");
+$row2=mysqli_fetch_array($qr2);
 $categoria=$row2['nome'];
 $valor=formata_dinheiro($row['valor_mov']);
 $tipo=$row['tipo_mov'];

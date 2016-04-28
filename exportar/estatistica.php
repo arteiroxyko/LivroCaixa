@@ -63,35 +63,35 @@ $pdf->SetFont('Arial','',12);
 $pdf->SetTextColor(0,0,0);
 $pdf->Cell(19,1,utf8_decode("$mesnome / $ano"),0,1,'L',0);
 
-$qrv=mysql_query("SELECT * FROM movimentos WHERE conta=1 && usuario='$usuario' && mes='$mes' && ano='$ano' ORDER By dia");
-if (mysql_num_rows($qrv)!==0){
+$qrv=mysqli_query($_SG['conexao'], "SELECT * FROM movimentos WHERE conta=1 && usuario='$usuario' && mes='$mes' && ano='$ano' ORDER By dia");
+if (mysqli_num_rows($qrv)!==0){
 
-$qrg=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo=1 && conta=1 && usuario='$usuario'");
-$rowg=mysql_fetch_array($qrg);
+$qrg=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo=1 && conta=1 && usuario='$usuario'");
+$rowg=mysqli_fetch_array($qrg);
 $entradasg=$rowg['total'];
 
-$qrg=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=1 && usuario='$usuario'");
-$rowg=mysql_fetch_array($qrg);
+$qrg=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=1 && usuario='$usuario'");
+$rowg=mysqli_fetch_array($qrg);
 $saidasg=$rowg['total'];
 
 $resultado_geral=$entradasg-$saidasg;
 $balancogeral=formata_dinheiro($resultado_geral);
 
-$qr=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo=1 && conta=1 && usuario='$usuario' && mes='$mes' && ano='$ano'");
-$row=mysql_fetch_array($qr);
+$qr=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo=1 && conta=1 && usuario='$usuario' && mes='$mes' && ano='$ano'");
+$row=mysqli_fetch_array($qr);
 $entradas=$row['total'];
 
-$qrs=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=1 && usuario='$usuario' && mes='$mes' && ano='$ano'");
-$rows=mysql_fetch_array($qrs);
+$qrs=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=1 && usuario='$usuario' && mes='$mes' && ano='$ano'");
+$rows=mysqli_fetch_array($qrs);
 $saidas=$rows['total'];
 
 $resultado_mes=$entradas-$saidas;
 $balanco=formata_dinheiro($resultado_mes);
 
 //Estáticas de entradas
-$qre=mysql_query("SELECT dia, cat, SUM(valor) as total FROM movimentos WHERE tipo=1 && conta=1 && usuario='$usuario' && mes='$mes' && ano='$ano' GROUP BY cat ORDER BY dia");
+$qre=mysqli_query($_SG['conexao'], "SELECT dia, cat, SUM(valor) as total FROM movimentos WHERE tipo=1 && conta=1 && usuario='$usuario' && mes='$mes' && ano='$ano' GROUP BY cat ORDER BY dia");
 
-if(mysql_num_rows($qre)!==0){
+if(mysqli_num_rows($qre)!==0){
 
 $pdf->SetFillColor(169,169,169);
 $pdf->SetFont('Arial','',12);
@@ -102,12 +102,12 @@ $pdf->Cell(4,0.6,'Valor:',0,0,'L',1);
 $pdf->Cell(3,0.6,'Percentual:',0,1,'R',1);
 
 $cont=0;
-while ($row=mysql_fetch_array($qre)){
+while ($row=mysqli_fetch_array($qre)){
 $cont++;
 
 $cat=$row['cat'];
-$qr2=mysql_query("SELECT nome FROM categorias WHERE id='$cat'");
-$row2=mysql_fetch_array($qr2);
+$qr2=mysqli_query($_SG['conexao'], "SELECT nome FROM categorias WHERE id='$cat'");
+$row2=mysqli_fetch_array($qr2);
 $categoria=$row2['nome'];
 $valorcat=$row['total'];
 $percento = @round (($valorcat/$entradas) * 100,1);
@@ -151,8 +151,8 @@ $pdf->Cell(19,0.7,utf8_decode('Não há receitas para o período selecionado.'),
 $pdf->Ln(0.5);}
 
 //Estáticas de saídas
-$qrs=mysql_query("SELECT dia, cat, SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=1 && usuario='$usuario' && mes='$mes' && ano='$ano' GROUP BY cat ORDER BY dia");
-if(mysql_num_rows($qrs)!==0){
+$qrs=mysqli_query($_SG['conexao'], "SELECT dia, cat, SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=1 && usuario='$usuario' && mes='$mes' && ano='$ano' GROUP BY cat ORDER BY dia");
+if(mysqli_num_rows($qrs)!==0){
 
 $pdf->SetFillColor(169,169,169);
 $pdf->SetFont('Arial','',12);
@@ -163,12 +163,12 @@ $pdf->Cell(4,0.6,'Valor:',0,0,'L',1);
 $pdf->Cell(3,0.6,'Percentual:',0,1,'R',1);
 
 $cont=0;
-while ($row=mysql_fetch_array($qrs)){
+while ($row=mysqli_fetch_array($qrs)){
 $cont++;
 
 $cat=$row['cat'];
-$qr2=mysql_query("SELECT nome FROM categorias WHERE id='$cat'");
-$row2=mysql_fetch_array($qr2);
+$qr2=mysqli_query($_SG['conexao'], "SELECT nome FROM categorias WHERE id='$cat'");
+$row2=mysqli_fetch_array($qr2);
 $categoria=$row2['nome'];
 $valorcat=$row['total'];
 $percento = @round (($valorcat/$saidas) * 100,1);
@@ -324,28 +324,28 @@ $pdf->SetFont('Arial','',12);
 $pdf->SetTextColor(0,0,0);
 $pdf->Cell(19,1,utf8_decode("Estatísticas do ano $ano."),0,1,'L',0);
 
-$qrv=mysql_query("SELECT * FROM movimentos WHERE conta=1 && usuario='$usuario' && ano='$ano' ORDER By dia");
-if (mysql_num_rows($qrv)!==0){
+$qrv=mysqli_query($_SG['conexao'], "SELECT * FROM movimentos WHERE conta=1 && usuario='$usuario' && ano='$ano' ORDER By dia");
+if (mysqli_num_rows($qrv)!==0){
 
-$qr=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo=1 && conta=1 && usuario='$usuario' && ano='$ano'");
-$row=mysql_fetch_array($qr);
+$qr=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo=1 && conta=1 && usuario='$usuario' && ano='$ano'");
+$row=mysqli_fetch_array($qr);
 $entradas=$row['total'];
 $entradastotal=formata_dinheiro($entradas);
 
-$qrs=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=1 && usuario='$usuario' && ano='$ano'");
-$rows=mysql_fetch_array($qrs);
+$qrs=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=1 && usuario='$usuario' && ano='$ano'");
+$rows=mysqli_fetch_array($qrs);
 $saidas=$rows['total'];
 
-$qror=mysql_query("SELECT SUM(valor) as total FROM orcamento WHERE conta=1 && usuario='$usuario' && ano='$ano'");
-$rowor=mysql_fetch_array($qror);
+$qror=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM orcamento WHERE conta=1 && usuario='$usuario' && ano='$ano'");
+$rowor=mysqli_fetch_array($qror);
 $orcamento=$rowor['total'];
 $orcamentoformat=formata_dinheiro($orcamento);
 $percentototal=@round (($saidas/$orcamento) * 100,1);
 
 //Estáticas de entradas
-$qre=mysql_query("SELECT dia, cat, SUM(valor) as total FROM movimentos WHERE tipo=1 && conta=1 && usuario='$usuario' && ano='$ano' GROUP BY cat ORDER BY dia");
+$qre=mysqli_query($_SG['conexao'], "SELECT dia, cat, SUM(valor) as total FROM movimentos WHERE tipo=1 && conta=1 && usuario='$usuario' && ano='$ano' GROUP BY cat ORDER BY dia");
 
-if(mysql_num_rows($qre)!==0){
+if(mysqli_num_rows($qre)!==0){
 
 $pdf->SetFillColor(169,169,169);
 $pdf->SetFont('Arial','',12);
@@ -359,12 +359,12 @@ $pdf->Cell(4,0.6,'Valor:',0,0,'L',1);
 $pdf->Cell(3,0.6,'Percentual:',0,1,'R',1);
 
 $cont=0;
-while ($row=mysql_fetch_array($qre)){
+while ($row=mysqli_fetch_array($qre)){
 $cont++;
 
 $cat=$row['cat'];
-$qr2=mysql_query("SELECT nome FROM categorias WHERE id='$cat'");
-$row2=mysql_fetch_array($qr2);
+$qr2=mysqli_query($_SG['conexao'], "SELECT nome FROM categorias WHERE id='$cat'");
+$row2=mysqli_fetch_array($qr2);
 $categoria=$row2['nome'];
 $valorcat=$row['total'];
 $percento = @round (($valorcat/$entradas) * 100,1);
@@ -401,8 +401,8 @@ $pdf->Cell(19,0.7,utf8_decode('Não há receitas para o período selecionado.'),
 $pdf->Ln(0.5);}
 
 //Estáticas de saídas
-$qrs=mysql_query("SELECT dia, mes, cat, SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=1 && usuario='$usuario' && ano='$ano' GROUP BY cat ORDER BY dia");
-if(mysql_num_rows($qrs)!==0){
+$qrs=mysqli_query($_SG['conexao'], "SELECT dia, mes, cat, SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=1 && usuario='$usuario' && ano='$ano' GROUP BY cat ORDER BY dia");
+if(mysqli_num_rows($qrs)!==0){
 
 $pdf->SetFillColor(169,169,169);
 $pdf->SetFont('Arial','',12);
@@ -421,12 +421,12 @@ $pdf->Cell(3,0.6,utf8_decode("saídas:"),0,0,'C',1);
 $pdf->Cell(3,0.6,utf8_decode("orçamento:"),0,1,'C',1);
 
 $cont=0;
-while ($row=mysql_fetch_array($qrs)){
+while ($row=mysqli_fetch_array($qrs)){
 $cont++;
 
 $cat=$row['cat'];
-$qr2=mysql_query("SELECT nome FROM categorias WHERE id='$cat'");
-$row2=mysql_fetch_array($qr2);
+$qr2=mysqli_query($_SG['conexao'], "SELECT nome FROM categorias WHERE id='$cat'");
+$row2=mysqli_fetch_array($qr2);
 $categoria=$row2['nome'];
 $valorcat=$row['total'];
 $percento = @round (($valorcat/$orcamento) * 100,1);
@@ -576,16 +576,16 @@ $pdf->SetFont('Arial','',12);
 $pdf->SetTextColor(0,0,0);
 $pdf->Cell(19,1,utf8_decode("$mesnome / $ano"),0,1,'L',0);
 
-$qrv=mysql_query("SELECT * FROM movimentos WHERE conta='$conta' && usuario='$usuario' && mes='$mes' && ano='$ano' ORDER By dia");
-if (mysql_num_rows($qrv)!==0){
+$qrv=mysqli_query($_SG['conexao'], "SELECT * FROM movimentos WHERE conta='$conta' && usuario='$usuario' && mes='$mes' && ano='$ano' ORDER By dia");
+if (mysqli_num_rows($qrv)!==0){
 
-$qrs=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta='$conta' && usuario='$usuario' && mes='$mes' && ano='$ano'");
-$rows=mysql_fetch_array($qrs);
+$qrs=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta='$conta' && usuario='$usuario' && mes='$mes' && ano='$ano'");
+$rows=mysqli_fetch_array($qrs);
 $saidas=$rows['total'];
 
 //Estáticas de saídas
-$qrs=mysql_query("SELECT dia, cat, SUM(valor) as total FROM movimentos WHERE tipo=0 && conta='$conta' && usuario='$usuario' && mes='$mes' && ano='$ano' GROUP BY cat ORDER BY dia");
-if(mysql_num_rows($qrs)!==0){
+$qrs=mysqli_query($_SG['conexao'], "SELECT dia, cat, SUM(valor) as total FROM movimentos WHERE tipo=0 && conta='$conta' && usuario='$usuario' && mes='$mes' && ano='$ano' GROUP BY cat ORDER BY dia");
+if(mysqli_num_rows($qrs)!==0){
 
 $pdf->SetFillColor(169,169,169);
 $pdf->SetFont('Arial','',12);
@@ -596,12 +596,12 @@ $pdf->Cell(4,0.6,'Valor:',0,0,'L',1);
 $pdf->Cell(3,0.6,'Percentual:',0,1,'R',1);
 
 $cont=0;
-while ($row=mysql_fetch_array($qrs)){
+while ($row=mysqli_fetch_array($qrs)){
 $cont++;
 
 $cat=$row['cat'];
-$qr2=mysql_query("SELECT nome FROM categorias WHERE id='$cat'");
-$row2=mysql_fetch_array($qr2);
+$qr2=mysqli_query($_SG['conexao'], "SELECT nome FROM categorias WHERE id='$cat'");
+$row2=mysqli_fetch_array($qr2);
 $categoria=$row2['nome'];
 $valorcat=$row['total'];
 $percento = @round (($valorcat/$saidas) * 100,1);
@@ -731,16 +731,16 @@ $pdf->SetFont('Arial','',12);
 $pdf->SetTextColor(0,0,0);
 $pdf->Cell(19,1,utf8_decode("Estatísticas do ano $ano."),0,1,'L',0);
 
-$qrv=mysql_query("SELECT * FROM movimentos WHERE tipo=0 && conta='$conta' && usuario='$usuario' && ano='$ano' ORDER By dia");
-if (mysql_num_rows($qrv)!==0){
+$qrv=mysqli_query($_SG['conexao'], "SELECT * FROM movimentos WHERE tipo=0 && conta='$conta' && usuario='$usuario' && ano='$ano' ORDER By dia");
+if (mysqli_num_rows($qrv)!==0){
 
-$qrs=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta='$conta' && usuario='$usuario' && ano='$ano'");
-$rows=mysql_fetch_array($qrs);
+$qrs=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta='$conta' && usuario='$usuario' && ano='$ano'");
+$rows=mysqli_fetch_array($qrs);
 $saidas=$rows['total'];
 
 //Estáticas de saídas
-$qrs=mysql_query("SELECT dia, cat, SUM(valor) as total FROM movimentos WHERE tipo=0 && conta='$conta' && usuario='$usuario' && ano='$ano' GROUP BY cat ORDER BY dia");
-if(mysql_num_rows($qrs)!==0){
+$qrs=mysqli_query($_SG['conexao'], "SELECT dia, cat, SUM(valor) as total FROM movimentos WHERE tipo=0 && conta='$conta' && usuario='$usuario' && ano='$ano' GROUP BY cat ORDER BY dia");
+if(mysqli_num_rows($qrs)!==0){
 
 $pdf->SetFillColor(169,169,169);
 $pdf->SetFont('Arial','',12);
@@ -751,12 +751,12 @@ $pdf->Cell(4,0.6,'Valor:',0,0,'L',1);
 $pdf->Cell(3,0.6,'Percentual:',0,1,'R',1);
 
 $cont=0;
-while ($row=mysql_fetch_array($qrs)){
+while ($row=mysqli_fetch_array($qrs)){
 $cont++;
 
 $cat=$row['cat'];
-$qr2=mysql_query("SELECT nome FROM categorias WHERE id='$cat' ORDER BY nome");
-$row2=mysql_fetch_array($qr2);
+$qr2=mysqli_query($_SG['conexao'], "SELECT nome FROM categorias WHERE id='$cat' ORDER BY nome");
+$row2=mysqli_fetch_array($qr2);
 $categoria=$row2['nome'];
 $valorcat=$row['total'];
 $percento = @round (($valorcat/$saidas) * 100,1);

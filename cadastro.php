@@ -24,8 +24,8 @@ if ($senha!=$senhaconf){
 	exit();
 }
 
-$qr=mysql_query("SELECT id, nome FROM usuarios where usuario='$usuario'");
-$linhas=mysql_num_rows($qr);
+$qr=mysqli_query($_SG['conexao'], "SELECT id, nome FROM usuarios where usuario='$usuario'");
+$linhas=mysqli_num_rows($qr);
 	
 if ($linhas!=0){
 echo "<script>
@@ -34,8 +34,8 @@ alert('Este usuário já existe, por favor tente novamente.'); location.href='lo
 exit();	
 }
 
-mysql_query("INSERT INTO usuarios (nome, sobrenome, usuario, senha, data) VALUES ('$nome', '$sobrenome', '$usuario', SHA1('$senha'), '$datacad')");
-echo mysql_error();
+mysqli_query($_SG['conexao'], "INSERT INTO usuarios (nome, sobrenome, usuario, senha, data) VALUES ('$nome', '$sobrenome', '$usuario', SHA2('$senha',512), '$datacad')");
+echo mysqli_error($_SG['conexao']);
 echo "<script>
 alert('Usuário cadastrado com sucesso.'); location.href='login.php'; historico.go(-1);
 </script>";
@@ -58,8 +58,8 @@ if ($novasenha!=$novasenhaconf){
 	exit();
 }
 
-mysql_query("UPDATE usuarios SET senha=SHA1('$novasenha') WHERE id='$usuario'");
-echo mysql_error();
+mysqli_query($_SG['conexao'], "UPDATE usuarios SET senha=SHA2('$novasenha',512) WHERE id='$usuario'");
+echo mysqli_error($_SG['conexao']);
 echo "<script>
 alert('Senha alterada com sucesso.'); location.href='$pagina'; historico.go(-1);
 </script>";

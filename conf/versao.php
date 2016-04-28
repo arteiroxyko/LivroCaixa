@@ -5,6 +5,6 @@ Atualizado por: <a>Walterlane Pereira</a>.";
 
 
 //Versão
-$versao='Versão 4.4 (31/03/2016).';
+$versao='Versão 4.6 (23/04/2016).';
 
 ?>

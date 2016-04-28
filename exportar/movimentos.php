@@ -62,8 +62,8 @@ $pdf->SetFont('Arial','',12);
 $pdf->SetTextColor(0,0,0);
 $pdf->Cell(19,1,utf8_decode("$mesnome / $ano"),0,1,'L',0);
 
-$qrv=mysql_query("SELECT * FROM movimentos WHERE conta=1 && usuario='$usuario' && mes='$mes' && ano='$ano' ORDER By dia");
-if (mysql_num_rows($qrv)!==0){
+$qrv=mysqli_query($_SG['conexao'], "SELECT * FROM movimentos WHERE conta=1 && usuario='$usuario' && mes='$mes' && ano='$ano' ORDER By dia");
+if (mysqli_num_rows($qrv)!==0){
 
 $pdf->SetFillColor(169,169,169);
 $pdf->SetFont('Arial','',12);
@@ -73,35 +73,35 @@ $pdf->Cell(12,0.6,utf8_decode('Descrição'),0,0,'C',1);
 $pdf->Cell(3,0.6,'Categoria',0,0,'C',1);
 $pdf->Cell(3,0.6,'Valor',0,1,'C',1);
 
-$qrg=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo=1 && conta=1 && usuario='$usuario'");
-$rowg=mysql_fetch_array($qrg);
+$qrg=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo=1 && conta=1 && usuario='$usuario'");
+$rowg=mysqli_fetch_array($qrg);
 $entradasg=$rowg['total'];
 
-$qrg=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=1 && usuario='$usuario'");
-$rowg=mysql_fetch_array($qrg);
+$qrg=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=1 && usuario='$usuario'");
+$rowg=mysqli_fetch_array($qrg);
 $saidasg=$rowg['total'];
 
 $resultado_geral=$entradasg-$saidasg;
 $balancogeral=formata_dinheiro($resultado_geral);
 
-$qr=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo=1 && conta=1 && usuario='$usuario' && mes='$mes' && ano='$ano'");
-$row=mysql_fetch_array($qr);
+$qr=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo=1 && conta=1 && usuario='$usuario' && mes='$mes' && ano='$ano'");
+$row=mysqli_fetch_array($qr);
 $entradas=$row['total'];
 
-$qr=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=1 && usuario='$usuario' && mes='$mes' && ano='$ano'");
-$row=mysql_fetch_array($qr);
+$qr=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=1 && usuario='$usuario' && mes='$mes' && ano='$ano'");
+$row=mysqli_fetch_array($qr);
 $saidas=$row['total'];
 
 $resultado_mes=$entradas-$saidas;
 
-$qr=mysql_query("SELECT * FROM movimentos WHERE conta=1 && usuario='$usuario' && mes='$mes' && ano='$ano' ORDER By dia");
+$qr=mysqli_query($_SG['conexao'], "SELECT * FROM movimentos WHERE conta=1 && usuario='$usuario' && mes='$mes' && ano='$ano' ORDER By dia");
 $cont=0;
-while ($row=mysql_fetch_array($qr)){
+while ($row=mysqli_fetch_array($qr)){
 $cont++;
 
 $cat=$row['cat'];
-$qr2=mysql_query("SELECT nome FROM categorias WHERE id='$cat'");
-$row2=mysql_fetch_array($qr2);
+$qr2=mysqli_query($_SG['conexao'], "SELECT nome FROM categorias WHERE id='$cat'");
+$row2=mysqli_fetch_array($qr2);
 $categoria=$row2['nome'];
 $valor=formata_dinheiro($row['valor']);
 $valortotal=formata_dinheiro($resultado_mes);
@@ -186,6 +186,7 @@ $pdf->Output("Movimentos_$mes-$ano.pdf",'D');
 if (isset($_POST['acao']) && $_POST['acao'] == 'fatura') {
 //Variável de mês a ser exportado
 $conta = $_POST['conta'];
+$nomeconta=$_POST['nome'];
 $mes = $_POST['mes'];
 $mesfat=$mes;
 $ano = $_POST['ano'];
@@ -245,8 +246,8 @@ $pdf->Cell(19,1,utf8_decode("Fatura do cartão de crédito."),0,0,'C',0);
 $pdf->Ln(1);
 
 //calculo da fatura
-$qr=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo='0' && conta='$conta' && usuario='$usuario' && mes='$mes' && ano='$ano'");
-$row=mysql_fetch_array($qr);
+$qr=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo='0' && conta='$conta' && usuario='$usuario' && mes='$mes' && ano='$ano'");
+$row=mysqli_fetch_array($qr);
 $saidas=$row['total'];
 $fatura=formata_dinheiro($saidas);
 
@@ -255,8 +256,8 @@ $pdf->SetTextColor(0,0,0);
 $pdf->Cell(19,1,utf8_decode("Vencimento em: $dia_venc de $mesnome de $anofat. Valor: $fatura."),0,1,'L',0);
 
 
-$qrvf=mysql_query("SELECT * FROM movimentos WHERE conta='$conta' && usuario='$usuario' && mes='$mes' && ano='$ano' ORDER By dia");
-if (mysql_num_rows($qrvf)!==0){
+$qrvf=mysqli_query($_SG['conexao'], "SELECT * FROM movimentos WHERE conta='$conta' && usuario='$usuario' && mes='$mes' && ano='$ano' ORDER By dia");
+if (mysqli_num_rows($qrvf)!==0){
 
 $pdf->SetFillColor(169,169,169);
 $pdf->SetFont('Arial','',12);
@@ -266,18 +267,18 @@ $pdf->Cell(12,0.6,utf8_decode('Descrição'),0,0,'C',1);
 $pdf->Cell(3,0.6,'Categoria',0,0,'L',1);
 $pdf->Cell(3,0.6,' Valor',0,1,'L',1);
 
-$qr=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta='$conta' && usuario='$usuario' && mes='$mes' && ano='$ano'");
-$row=mysql_fetch_array($qr);
+$qr=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta='$conta' && usuario='$usuario' && mes='$mes' && ano='$ano'");
+$row=mysqli_fetch_array($qr);
 $saidas=$row['total'];
 
-$qr=mysql_query("SELECT * FROM movimentos WHERE tipo=0 && conta='$conta' && usuario='$usuario' && mes='$mes' && ano='$ano' ORDER By dia");
+$qr=mysqli_query($_SG['conexao'], "SELECT * FROM movimentos WHERE tipo=0 && conta='$conta' && usuario='$usuario' && mes='$mes' && ano='$ano' ORDER By dia");
 $cont=0;
-while ($row=mysql_fetch_array($qr)){
+while ($row=mysqli_fetch_array($qr)){
 $cont++;
 
 $cat=$row['cat'];
-$qr2=mysql_query("SELECT nome FROM categorias WHERE id='$cat'");
-$row2=mysql_fetch_array($qr2);
+$qr2=mysqli_query($_SG['conexao'], "SELECT nome FROM categorias WHERE id='$cat'");
+$row2=mysqli_fetch_array($qr2);
 $categoria=$row2['nome'];
 $valor=formata_dinheiro($row['valor']);
 $valortotal=formata_dinheiro($saidas);
@@ -319,7 +320,7 @@ $pdf->Cell(4,0.7,"$valortotal ",0,1,'R',1);
 $pdf->Ln(0.5);
 
 ob_start();
-$pdf->Output("Fatura_$mes-$ano.pdf",'D');
+$pdf->Output("$nomeconta-$mes-$ano.pdf",'D');
 
 }else{
 $pdf->SetFont('Times','',12);
@@ -330,7 +331,7 @@ $pdf->Ln(0.7);
 $pdf->Ln(0.5);
 
 ob_start();
-$pdf->Output("Fatura_$mes-$ano.pdf",'D');
+$pdf->Output("$nomeconta-$mes-$ano.pdf",'D');
 }
 
 }

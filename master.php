@@ -8,8 +8,8 @@ $usuario=$_SESSION['usuarioID'];
 //Apagar movimentos
 if (isset($_GET['acao']) && $_GET['acao'] == 'apagar') {
     $id = $_GET['id'];
-    $log=mysql_query("SELECT * FROM movimentos WHERE id='$id'");
-    $logexc=mysql_fetch_array($log);
+    $log=mysqli_query($_SG['conexao'], "SELECT * FROM movimentos WHERE id='$id'");
+    $logexc=mysqli_fetch_array($log);
     $idmov=$logexc['id'];
     $tipomov=$logexc['tipo'];
     $descmov=$logexc['descricao'];
@@ -18,10 +18,10 @@ if (isset($_GET['acao']) && $_GET['acao'] == 'apagar') {
     $contamov=$logexc['conta'];
     $dataexc = date("Ymd");
 	
-    mysql_query("INSERT INTO exclusoes (id_mov_exc,tipo_mov,desc_mov,valor_mov,cat_mov,conta_mov,data_exc,usuario_mov) values ('$idmov','$tipomov','$descmov','$valormov','$catmov','$contamov','$dataexc','$usuario')");
-    mysql_query("DELETE FROM movimentos WHERE id='$id'");
-    mysql_query("DELETE FROM historico WHERE id_mov='$id'");
-    echo mysql_error();
+    mysqli_query($_SG['conexao'], "INSERT INTO exclusoes (id_mov_exc,tipo_mov,desc_mov,valor_mov,cat_mov,conta_mov,data_exc,usuario_mov) values ('$idmov','$tipomov','$descmov','$valormov','$catmov','$contamov','$dataexc','$usuario')");
+    mysqli_query($_SG['conexao'], "DELETE FROM movimentos WHERE id='$id'");
+    mysqli_query($_SG['conexao'], "DELETE FROM historico WHERE id_mov='$id'");
+    echo mysqli_error($_SG['conexao']);
     header("Location: ?mes=" . $_GET['mes'] . "&ano=" . $_GET['ano'] . "&ok=2");
     exit();
 }
@@ -31,8 +31,8 @@ if (isset($_POST['acao']) && $_POST['acao'] == 'editar_cat') {
     $id = $_POST['id'];
     $nome = $_POST['nome'];
 
-    mysql_query("UPDATE categorias SET nome='$nome' WHERE id='$id'");
-    echo mysql_error();
+    mysqli_query($_SG['conexao'], "UPDATE categorias SET nome='$nome' WHERE id='$id'");
+    echo mysqli_error($_SG['conexao']);
     header("Location: ?mes=" . $_GET['mes'] . "&ano=" . $_GET['ano'] . "&cat_ok=3");
     exit();
 }
@@ -41,14 +41,14 @@ if (isset($_POST['acao']) && $_POST['acao'] == 'editar_cat') {
 if (isset($_GET['acao']) && $_GET['acao'] == 'apagar_cat') {
     $id = $_GET['id'];
 
-    $qr=mysql_query("SELECT c.id FROM movimentos g, categorias c WHERE c.id=g.cat && c.id=$id");
-    if (mysql_num_rows($qr)!==0){
+    $qr=mysqli_query($_SG['conexao'], "SELECT c.id FROM movimentos g, categorias c WHERE c.id=g.cat && c.id=$id");
+    if (mysqli_num_rows($qr)!==0){
         header("Location: ?mes=" . $_GET['mes'] . "&ano=" . $_GET['ano'] . "&cat_err=1");
         exit();
     }
     else{
-    mysql_query("DELETE FROM categorias WHERE id='$id'");
-    echo mysql_error();
+    mysqli_query($_SG['conexao'], "DELETE FROM categorias WHERE id='$id'");
+    echo mysqli_error($_SG['conexao']);
     header("Location: ?mes=" . $_GET['mes'] . "&ano=" . $_GET['ano'] . "&cat_ok=2");
     exit();
 	}
@@ -66,8 +66,8 @@ if (isset($_POST['acao']) && $_POST['acao'] == 'editar_mov') {
     $descricao = $_POST['descricao'];
     $valor = str_replace(",", ".", $_POST['valor']);
     $dataed = date("Ymd");
-	$qred=mysql_query("SELECT * FROM movimentos WHERE id='$id'");
-	$rowed=mysql_fetch_array($qred);
+	$qred=mysqli_query($_SG['conexao'], "SELECT * FROM movimentos WHERE id='$id'");
+	$rowed=mysqli_fetch_array($qred);
 
 if (empty($valor)){ 
 echo "<script>
@@ -76,44 +76,44 @@ alert('O campo VALOR é obrigatório, e precisa ser diferente de zero para edita
 exit();
 }
 	if ($dia!=$rowed['dia']){
-	mysql_query("UPDATE movimentos SET dia='$dia', mes='$mes', ano='$ano', tipo='$tipo', cat='$cat', conta='$conta_lan', descricao='$descricao', valor='$valor', edicao='Editado' WHERE id='$id'");
-	mysql_query("INSERT INTO historico (id_mov,just_id,data,conta_mov,usuario) values ('$id','1','$dataed','3','$usuario')");
-    echo mysql_error();}
+	mysqli_query($_SG['conexao'], "UPDATE movimentos SET dia='$dia', mes='$mes', ano='$ano', tipo='$tipo', cat='$cat', conta='$conta_lan', descricao='$descricao', valor='$valor', edicao='Editado' WHERE id='$id'");
+	mysqli_query($_SG['conexao'], "INSERT INTO historico (id_mov,just_id,data,conta_mov,usuario) values ('$id','1','$dataed','3','$usuario')");
+    echo mysqli_error($_SG['conexao']);}
 
 	if ($mes!=$rowed['mes']){
-	mysql_query("UPDATE movimentos SET dia='$dia', mes='$mes', ano='$ano', tipo='$tipo', cat='$cat', conta='$conta_lan', descricao='$descricao', valor='$valor', edicao='Editado' WHERE id='$id'");
-	mysql_query("INSERT INTO historico (id_mov,just_id,data,conta_mov,usuario) values ('$id','2','$dataed','3','$usuario')");
-    echo mysql_error();}
+	mysqli_query($_SG['conexao'], "UPDATE movimentos SET dia='$dia', mes='$mes', ano='$ano', tipo='$tipo', cat='$cat', conta='$conta_lan', descricao='$descricao', valor='$valor', edicao='Editado' WHERE id='$id'");
+	mysqli_query($_SG['conexao'], "INSERT INTO historico (id_mov,just_id,data,conta_mov,usuario) values ('$id','2','$dataed','3','$usuario')");
+    echo mysqli_error($_SG['conexao']);}
 	
 	if ($ano!=$rowed['ano']){
-	mysql_query("UPDATE movimentos SET dia='$dia', mes='$mes', ano='$ano', tipo='$tipo', cat='$cat', conta='$conta_lan', descricao='$descricao', valor='$valor', edicao='Editado' WHERE id='$id'");
-	mysql_query("INSERT INTO historico (id_mov,just_id,data,conta_mov,usuario) values ('$id','3','$dataed','3','$usuario')");
-    echo mysql_error();}
+	mysqli_query($_SG['conexao'], "UPDATE movimentos SET dia='$dia', mes='$mes', ano='$ano', tipo='$tipo', cat='$cat', conta='$conta_lan', descricao='$descricao', valor='$valor', edicao='Editado' WHERE id='$id'");
+	mysqli_query($_SG['conexao'], "INSERT INTO historico (id_mov,just_id,data,conta_mov,usuario) values ('$id','3','$dataed','3','$usuario')");
+    echo mysqli_error($_SG['conexao']);}
 	
 	if ($tipo!=$rowed['tipo']){
-	mysql_query("UPDATE movimentos SET dia='$dia', mes='$mes', ano='$ano', tipo='$tipo', cat='$cat', conta='$conta_lan', descricao='$descricao', valor='$valor', edicao='Editado' WHERE id='$id'");
-	mysql_query("INSERT INTO historico (id_mov,just_id,data,conta_mov,usuario) values ('$id','4','$dataed','3','$usuario')");
-    echo mysql_error();}
+	mysqli_query($_SG['conexao'], "UPDATE movimentos SET dia='$dia', mes='$mes', ano='$ano', tipo='$tipo', cat='$cat', conta='$conta_lan', descricao='$descricao', valor='$valor', edicao='Editado' WHERE id='$id'");
+	mysqli_query($_SG['conexao'], "INSERT INTO historico (id_mov,just_id,data,conta_mov,usuario) values ('$id','4','$dataed','3','$usuario')");
+    echo mysqli_error($_SG['conexao']);}
 	
 	if ($cat!=$rowed['cat']){
-	mysql_query("UPDATE movimentos SET dia='$dia', mes='$mes', ano='$ano', tipo='$tipo', cat='$cat', conta='$conta_lan', descricao='$descricao', valor='$valor', edicao='Editado' WHERE id='$id'");
-	mysql_query("INSERT INTO historico (id_mov,just_id,data,conta_mov,usuario) values ('$id','5','$dataed','3','$usuario')");
-    echo mysql_error();}
+	mysqli_query($_SG['conexao'], "UPDATE movimentos SET dia='$dia', mes='$mes', ano='$ano', tipo='$tipo', cat='$cat', conta='$conta_lan', descricao='$descricao', valor='$valor', edicao='Editado' WHERE id='$id'");
+	mysqli_query($_SG['conexao'], "INSERT INTO historico (id_mov,just_id,data,conta_mov,usuario) values ('$id','5','$dataed','3','$usuario')");
+    echo mysqli_error($_SG['conexao']);}
 	
 	if ($descricao!=$rowed['descricao']){
-	mysql_query("UPDATE movimentos SET dia='$dia', mes='$mes', ano='$ano', tipo='$tipo', cat='$cat', conta='$conta_lan', descricao='$descricao', valor='$valor', edicao='Editado' WHERE id='$id'");
-	mysql_query("INSERT INTO historico (id_mov,just_id,data,conta_mov,usuario) values ('$id','6','$dataed','3','$usuario')");
-    echo mysql_error();}
+	mysqli_query($_SG['conexao'], "UPDATE movimentos SET dia='$dia', mes='$mes', ano='$ano', tipo='$tipo', cat='$cat', conta='$conta_lan', descricao='$descricao', valor='$valor', edicao='Editado' WHERE id='$id'");
+	mysqli_query($_SG['conexao'], "INSERT INTO historico (id_mov,just_id,data,conta_mov,usuario) values ('$id','6','$dataed','3','$usuario')");
+    echo mysqli_error($_SG['conexao']);}
 	
 	if ($valor!=$rowed['valor']){
-	mysql_query("UPDATE movimentos SET dia='$dia', mes='$mes', ano='$ano', tipo='$tipo', cat='$cat', conta='$conta_lan', descricao='$descricao', valor='$valor', edicao='Editado' WHERE id='$id'");
-	mysql_query("INSERT INTO historico (id_mov,just_id,data,conta_mov,usuario) values ('$id','7','$dataed','3','$usuario')");
-    echo mysql_error();}
+	mysqli_query($_SG['conexao'], "UPDATE movimentos SET dia='$dia', mes='$mes', ano='$ano', tipo='$tipo', cat='$cat', conta='$conta_lan', descricao='$descricao', valor='$valor', edicao='Editado' WHERE id='$id'");
+	mysqli_query($_SG['conexao'], "INSERT INTO historico (id_mov,just_id,data,conta_mov,usuario) values ('$id','7','$dataed','3','$usuario')");
+    echo mysqli_error($_SG['conexao']);}
 	
 	if ($conta_lan!=$rowed['conta']){
-    mysql_query("UPDATE movimentos SET dia='$dia', mes='$mes', ano='$ano', tipo='$tipo', cat='$cat', conta='$conta_lan', descricao='$descricao', valor='$valor', edicao='Editado' WHERE id='$id'");
-	mysql_query("INSERT INTO historico (id_mov,just_id,data,conta_mov,usuario) values ('$id','8','$dataed','$conta_lan','$usuario')");
-    echo mysql_error();}
+    mysqli_query($_SG['conexao'], "UPDATE movimentos SET dia='$dia', mes='$mes', ano='$ano', tipo='$tipo', cat='$cat', conta='$conta_lan', descricao='$descricao', valor='$valor', edicao='Editado' WHERE id='$id'");
+	mysqli_query($_SG['conexao'], "INSERT INTO historico (id_mov,just_id,data,conta_mov,usuario) values ('$id','8','$dataed','$conta_lan','$usuario')");
+    echo mysqli_error($_SG['conexao']);}
     header("Location: ?mes=" . $_GET['mes'] . "&ano=" . $_GET['ano'] . "&ok=3");
     exit();
 }
@@ -122,8 +122,8 @@ exit();
 if (isset($_POST['acao']) && $_POST['acao'] == 2) {
     $nome = $_POST['nome'];
 
-    mysql_query("INSERT INTO categorias (nome,usuario) values ('$nome','$usuario')");
-    echo mysql_error();
+    mysqli_query($_SG['conexao'], "INSERT INTO categorias (nome,usuario) values ('$nome','$usuario')");
+    echo mysqli_error($_SG['conexao']);
     header("Location: ?mes=" . $_GET['mes'] . "&ano=" . $_GET['ano'] . "&cat_ok=1");
     exit();
 }
@@ -151,8 +151,8 @@ exit();
 }
 	$n=1;
 	while ($n <= $parcelas) {
-    mysql_query("INSERT INTO movimentos (dia,mes,ano,tipo,descricao,valor,cat,conta,nparcela,parcelas,usuario) values ('$dia','$mes','$ano','$tipo','$descricao','$valor','$cat','3','$n','$parcelas','$usuario')");
-    echo mysql_error();
+    mysqli_query($_SG['conexao'], "INSERT INTO movimentos (dia,mes,ano,tipo,descricao,valor,cat,conta,nparcela,parcelas,usuario) values ('$dia','$mes','$ano','$tipo','$descricao','$valor','$cat','3','$n','$parcelas','$usuario')");
+    echo mysqli_error($_SG['conexao']);
     header("Location: ?mes=" . $_GET['mes'] . "&ano=" . $_GET['ano'] . "&ok=1");
 	if ($mes<=11){
 	$mes++;}
@@ -170,8 +170,8 @@ if (isset($_POST['acao']) && $_POST['acao'] == 'limite_master') {
 	$limitemaster = str_replace( ",", ".",$valor_recebido);
 	$diavenc = $_POST['diavenc'];
 
-    mysql_query("UPDATE usuarios SET master='$limitemaster', dia_venc_m='$diavenc' WHERE id='$usuario'");
-    echo mysql_error();
+    mysqli_query($_SG['conexao'], "UPDATE usuarios SET master='$limitemaster', dia_venc_m='$diavenc' WHERE id='$usuario'");
+    echo mysqli_error($_SG['conexao']);
     header("Location: ?mes=" . $_GET['mes'] . "&ano=" . $_GET['ano']);
     exit();
 }
@@ -180,6 +180,7 @@ if (isset($_POST['acao']) && $_POST['acao'] == 'limite_master') {
 if (isset($_POST['acao']) && $_POST['acao'] == 'cad_orcamento') {
     $valor_recebido = str_replace(".", "", $_POST['valor']);
 	$valor_orcamento = str_replace( ",", ".",$valor_recebido);
+	$tipo = $_POST['tipo'];
     $data = $_POST['data'];
 	$t = explode("/", $data);
     $dia = $t[0];
@@ -189,20 +190,20 @@ if (isset($_POST['acao']) && $_POST['acao'] == 'cad_orcamento') {
 	
 if (empty($valor_orcamento)){
 echo "<script>
-alert('O campo VALOR é obrigatório, e precisa ser diferente de zero.'); location.href='index.php'; historico.go(-1);
+alert('O campo VALOR é obrigatório, e precisa ser diferente de zero.'); location.href='master.php'; historico.go(-1);
 </script>";
 exit;
 }
 	if ($tipo!=0){
-    mysql_query("INSERT INTO orcamento (mes,ano,valor,conta,usuario) values ('$mes','$ano','$valor_orcamento','3','$usuario')");
-    echo mysql_error();
+	mysqli_query($_SG['conexao'], "INSERT INTO orcamento (mes,ano,valor,conta,usuario) values ('$mes','$ano','$valor_orcamento','3','$usuario')");
+    echo mysqli_error($_SG['conexao']);
     header("Location: ?mes=" . $_GET['mes'] . "&ano=" . $_GET['ano']);
 	exit();
 	}
 	$n=1;
 	while ($n <= $valida_meses) {
-    mysql_query("INSERT INTO orcamento (mes,ano,valor,conta,usuario) values ('$mes','$ano','$valor_orcamento','3','$usuario')");
-    echo mysql_error();
+    mysqli_query($_SG['conexao'], "INSERT INTO orcamento (mes,ano,valor,conta,usuario) values ('$mes','$ano','$valor_orcamento','3','$usuario')");
+    echo mysqli_error($_SG['conexao']);
     header("Location: ?mes=" . $_GET['mes'] . "&ano=" . $_GET['ano']);
 	if ($mes<=11){
 	$mes++;}
@@ -225,18 +226,18 @@ if (isset($_POST['acao']) && $_POST['acao'] == 'ed_orcamento') {
 	
 if (empty($valor_orcamento)){
 echo "<script>
-alert('O campo VALOR é obrigatório, e precisa ser diferente de zero.'); location.href='index.php'; historico.go(-1);
+alert('O campo VALOR é obrigatório, e precisa ser diferente de zero.'); location.href='master.php'; historico.go(-1);
 </script>";
 exit();
 }
 	if ($tipo!=0){
-	mysql_query("UPDATE orcamento SET valor='$valor_orcamento' WHERE mes='$mes' && conta='3' && usuario='$usuario'");
-    echo mysql_error();
+	mysqli_query($_SG['conexao'], "UPDATE orcamento SET valor='$valor_orcamento' WHERE mes='$mes' && conta='3' && usuario='$usuario'");
+    echo mysqli_error($_SG['conexao']);
 	header("Location: ?mes=" . $_GET['mes'] . "&ano=" . $_GET['ano']);
     exit();
 	}
-    mysql_query("UPDATE orcamento SET valor='$valor_orcamento' WHERE mes>=$mes && ano='$ano' && conta='3' && usuario='$usuario'");
-    echo mysql_error();
+    mysqli_query($_SG['conexao'], "UPDATE orcamento SET valor='$valor_orcamento' WHERE mes>=$mes && ano='$ano' && conta='3' && usuario='$usuario'");
+    echo mysqli_error($_SG['conexao']);
 	header("Location: ?mes=" . $_GET['mes'] . "&ano=" . $_GET['ano']);
     exit();
 }
@@ -397,7 +398,7 @@ $('.image-switch').addClass('active');
 			messages: {
 				diavenc: {
 					required: "Campo obrigatório.",
-					digits: "Favor inserir apenas digitos"
+					digits: "Apenas números"
 				},
 			}
 		});
@@ -438,7 +439,7 @@ $(function () {
 <table cellpadding="1" cellspacing="10"  width="1000" align="center" style="background-color:#033">
 <tr>
 <td colspan="11" style="background-color:#005B5B;">
-<h2 style="margin:5px"><a href=index.php style="color:#008B8B">Conta Corrente</a> | <a href=visa.php style="color:#008B8B">Cartão Visa</a> | <a href=master.php style="color:#FFF">Cartão Master</a></h2>
+<h2 style="margin:5px"><a href=index.php style="color:#008B8B">Conta Corrente</a> | <a href=visa.php style="color:#008B8B">Cartão Visa</a> | <a href=master.php style="color:#FFF">Cartão Master</a> | <a href=./dashboard/dashboard.php style="color:#008B8B">Dashboard</a></h2>
 </td>
 <td colspan="2" align="right" style="background-color:#005B5B;">
 <a style="color:#FFF" href="?mes=<?php echo date('m')?>&ano=<?php echo date('Y')?>">Hoje:<strong> <?php echo date('d')?> de <?php echo mostraMes(date('m'))?> de <?php echo date('Y')?></a></strong>&nbsp; 
@@ -477,11 +478,11 @@ for ($i=1;$i<=12;$i++){
 <table cellpadding="5" cellspacing="0" width="1000" align="center">
 <tr>
 <?php
-$qrvisita=mysql_query("SELECT * FROM usuarios where id='$usuario'");
-$rowvisita=mysql_fetch_array($qrvisita);
+$qrvisita=mysqli_query($_SG['conexao'], "SELECT * FROM usuarios where id='$usuario'");
+$rowvisita=mysqli_fetch_array($qrvisita);
 
-$qracesso=mysql_query("SELECT * FROM usuarios where id='$usuario'");
-$rowacesso=mysql_fetch_array($qracesso);
+$qracesso=mysqli_query($_SG['conexao'], "SELECT * FROM usuarios where id='$usuario'");
+$rowacesso=mysqli_fetch_array($qracesso);
 $n=$rowacesso['n_acesso_f'];
 $n_acesso=$n+1;
 ?>
@@ -510,7 +511,7 @@ $n_acesso=$n+1;
 <input type="hidden" name="acao" value="alterar_senha" />
 <input type="hidden" name="pagina" value="index.php" />
 <input type="hidden" name="usuario" value="<?php echo $usuario?>" />
-<b>Nova senha:</b> <input type="password" name="novasenha" id="novasenha" onkeyup="passwordStrength(this.value)"> <b>Confirmar nova senha:</b> <input type="password" name="novasenhaconf" id="novasenhaconf"><br>
+<b>Nova senha:</b> <font color="#FF0000" size=2><input type="password" name="novasenha" id="novasenha" onkeyup="passwordStrength(this.value)"></font> <b>Confirmar nova senha:</b> <font color="#FF0000" size=2><input type="password" name="novasenhaconf" id="novasenhaconf"></font><br>
 <label for="passwordStrength"><font size=2>Força da senha</font></label><br>
 <div id="passwordDescription"></div>
 <div id="passwordStrength" class="strength0"></div>
@@ -523,14 +524,16 @@ $n_acesso=$n+1;
 
 <table cellpadding="5" cellspacing="0" width="1000" align="center">
 <?php
-$qr=mysql_query("SELECT SUM(valor) as total FROM orcamento WHERE mes='$mes_hoje' && ano='$ano_hoje' && conta=3 && usuario='$usuario'");
-$row=mysql_fetch_array($qr);
+$qr=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM orcamento WHERE mes='$mes_hoje' && ano='$ano_hoje' && conta=3 && usuario='$usuario'");
+$row=mysqli_fetch_array($qr);
 $total=$row['total'];
 
-$qr=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=3 && usuario='$usuario' && mes='$mes_hoje' && ano='$ano_hoje'");
-$row=mysql_fetch_array($qr);
+$qr=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=3 && usuario='$usuario' && mes='$mes_hoje' && ano='$ano_hoje'");
+$row=mysqli_fetch_array($qr);
 $gasto=$row['total'];
 $resta=$total-$gasto;
+
+if ($total>0){
 $percento = @round (($gasto/$total) * 100,2);
 
 if ($percento>100){
@@ -539,9 +542,14 @@ if ($percento>100){
 if ($percento<=100){
 	$comp=$percento;
 }
+}
+else {
+	$percento='-1';
+	$comp='100';
+}
 ?>
 <tr style="display:none;" id="orcamento">
-<td align="left" style="font-size:14px; color:rgb(0, 0, 0)">
+<td align="left" style="font-size:11px; color:rgb(0, 0, 0)">
 <a href="javascript:;" style="font-size:12px" onclick="abreFecha('lancar_orcamento')" title="Gereciar orçamento">Orçamento mensal: <?php echo formata_dinheiro($gasto)?><?php echo " de "?><?php echo formata_dinheiro($total)?><?php echo " resta "?><font color="<?php if ($resta <= 0) echo "#C00"?>"><?php echo formata_dinheiro($resta)?></font>.</a><br>
 <style type="text/CSS">
 .outter{
@@ -552,7 +560,11 @@ if ($percento<=100){
 .inner{
 	height:20px;
 	width:<?php echo $comp ?>%;
-	background: <?php if (($percento >0) AND ($percento <=65)) echo "rgb(180,221,180); /* Old browsers */
+	background: <?php if ($percento<=0) echo "rgb(240,240,240); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(240,240,240,1) 0%, rgba(228,228,228,1) 50%, rgba(223,223,223,1) 51%, rgba(240,240,240,1) 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top,  rgba(240,240,240,1) 0%,rgba(228,228,228,1) 50%,rgba(223,223,223,1) 51%,rgba(240,240,240,1) 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom,  rgba(240,240,240,1) 0%,rgba(228,228,228,1) 50%,rgba(223,223,223,1) 51%,rgba(240,240,240,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f0f0', endColorstr='#f0f0f0',GradientType=0 ); /* IE6-9 */"; else if (($percento >0) AND ($percento <=65)) echo "rgb(180,221,180); /* Old browsers */
 	background: -moz-linear-gradient(top,  rgba(180,221,180,1) 0%, rgba(131,199,131,1) 4%, rgba(131,199,131,1) 4%, rgba(131,199,131,1) 30%, rgba(131,199,131,1) 42%, rgba(0,138,0,1) 100%, rgba(0,87,0,1) 100%, rgba(0,36,0,1) 100%); /* FF3.6-15 */
 	background: -webkit-linear-gradient(top,  rgba(180,221,180,1) 0%,rgba(131,199,131,1) 4%,rgba(131,199,131,1) 4%,rgba(131,199,131,1) 30%,rgba(131,199,131,1) 42%,rgba(0,138,0,1) 100%,rgba(0,87,0,1) 100%,rgba(0,36,0,1) 100%); /* Chrome10-25,Safari5.1-6 */
 	background: linear-gradient(to bottom,  rgba(180,221,180,1) 0%,rgba(131,199,131,1) 4%,rgba(131,199,131,1) 4%,rgba(131,199,131,1) 30%,rgba(131,199,131,1) 42%,rgba(0,138,0,1) 100%,rgba(0,87,0,1) 100%,rgba(0,36,0,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
@@ -568,7 +580,7 @@ if ($percento<=100){
 }
 </style>
 <div class="outter">
-<div class="inner"><center><?php if ($percento <=0) echo ""; else echo $percento ?>%</center></div>
+<div class="inner"><center><?php if ($percento <0) echo "Não "."há "."orçamento "."cadastrado."; else echo $percento ."%"?></center></div>
 </div>
 </td>
 </tr>
@@ -705,8 +717,8 @@ Nome: <input type="text" name="nome" size="20" maxlength="50" />
             <td valign="top" align="right">
                 <b>Editar/Remover Categorias:</b><br/><br/>
 <?php
-$qr=mysql_query("SELECT id, nome FROM categorias where usuario='$usuario' ORDER BY nome");
-while ($row=mysql_fetch_array($qr)){
+$qr=mysqli_query($_SG['conexao'], "SELECT id, nome FROM categorias where usuario='$usuario' ORDER BY nome");
+while ($row=mysqli_fetch_array($qr)){
 ?>
                 <div id="editar2_cat_<?php echo $row['id']?>">
 <?php echo $row['nome']?>  
@@ -735,8 +747,8 @@ while ($row=mysql_fetch_array($qr)){
 <div style=" background-color:#F1F1F1; padding:10px; border:1px solid #999; margin:5px; display:none" id="add_movimento">
 <h3>Adicionar Movimento</h3>
 <?php
-$qr=mysql_query("SELECT id, nome FROM categorias where usuario='$usuario' ORDER BY nome");
-if (mysql_num_rows($qr)==0)
+$qr=mysqli_query($_SG['conexao'], "SELECT id, nome FROM categorias where usuario='$usuario' ORDER BY nome");
+if (mysqli_num_rows($qr)==0)
 	echo "Adicione ao menos uma categoria";
 
 else{
@@ -753,7 +765,7 @@ else{
 <strong>Categoria:</strong>
 <select name="cat">
 <?php
-while ($row=mysql_fetch_array($qr)){
+while ($row=mysqli_fetch_array($qr)){
 ?>
 <option value="<?php echo $row['id']?>"><?php echo $row['nome']?></option>
 <?php }?>
@@ -768,10 +780,10 @@ while ($row=mysql_fetch_array($qr)){
 <br />
 
 <font color="#000" size=1>Obs.: Em gastos parcelados, deve ser informado o valor total da compra, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e não o valor da parcela.</font><br />
-<strong>Valor:</strong> R$ <input type=text name=valor id="valor" length=15 onKeyPress="return(FormataReais(this,'.',',',event))">
+<strong>Valor:</strong> R$ <font color="#FF0000" size=2><input type=text name=valor id="valor" length=15 onKeyPress="return(FormataReais(this,'.',',',event))"></font>
 &nbsp;  |  &nbsp;
 <strong>Parcelas:</strong>
-<input type="text" value="1" name="parcelas" size="2" maxlength="4" id="parcelas"/>
+<font color="#FF0000" size=2><input type="text" value="1" name="parcelas" size="2" maxlength="4" id="parcelas"/></font>
 
 <br />
 <br />
@@ -787,18 +799,18 @@ while ($row=mysql_fetch_array($qr)){
 <td align="left" valign="top" width="450" style="background-color:#D3FFE2">
 
 <?php
-$qr=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo=1 && conta=3 && usuario='$usuario' && mes='$mes_hoje' && ano='$ano_hoje'");
-$row=mysql_fetch_array($qr);
+$qr=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo=1 && conta=3 && usuario='$usuario' && mes='$mes_hoje' && ano='$ano_hoje'");
+$row=mysqli_fetch_array($qr);
 $entradas=$row['total'];
 
-$qr=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=3 && usuario='$usuario' && mes='$mes_hoje' && ano='$ano_hoje'");
-$row=mysql_fetch_array($qr);
+$qr=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=3 && usuario='$usuario' && mes='$mes_hoje' && ano='$ano_hoje'");
+$row=mysqli_fetch_array($qr);
 $saidas=$row['total'];
 
 $resultado_mes=$saidas;
 
-$qr=mysql_query("SELECT * FROM usuarios WHERE id='$usuario'");
-$row=mysql_fetch_array($qr);
+$qr=mysqli_query($_SG['conexao'], "SELECT * FROM usuarios WHERE id='$usuario'");
+$row=mysqli_fetch_array($qr);
 $dia_venc=$row['dia_venc_m'];
 ?>
 
@@ -834,16 +846,16 @@ $dia_venc=$row['dia_venc_m'];
 
 <?php
 
-$qr=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo=1 && conta=3 && usuario='$usuario'");
-$row=mysql_fetch_array($qr);
+$qr=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo=1 && conta=3 && usuario='$usuario'");
+$row=mysqli_fetch_array($qr);
 $entradas=$row['total'];
 
-$qr=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=3 && usuario='$usuario'");
-$row=mysql_fetch_array($qr);
+$qr=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=3 && usuario='$usuario'");
+$row=mysqli_fetch_array($qr);
 $saidas=$row['total'];
 
-$qr=mysql_query("SELECT dia_venc_m, SUM(master) as total FROM usuarios WHERE id='$usuario'");
-$row=mysql_fetch_array($qr);
+$qr=mysqli_query($_SG['conexao'], "SELECT dia_venc_m, SUM(master) as total FROM usuarios WHERE id='$usuario'");
+$row=mysqli_fetch_array($qr);
 $valormaster=$row['total'];
 $dia_venc_m=$row['dia_venc_m'];
 $master=formata_dinheiro($valormaster);
@@ -861,7 +873,7 @@ $resultado_geral=$valormaster+$entradas-$saidas;
 <form id="form_cart" method="post" action="?mes=<?php echo $mes_hoje?>&ano=<?php echo $ano_hoje?>">
 <input type="hidden" name="acao" value="limite_master" />
 <b>Valor:</b> R$  <input type=text value="<?php echo $valormaster?>" name=valor length=15 onKeyPress="return(FormataReais(this,'.',',',event))"><br>
-<b>Dia vencimento:</b> <input type="text" value="<?php echo $dia_venc_m?>" name="diavenc" id="diavenc" size="1" maxlength="2">
+<b>Dia vencimento:</b> <font color="#FF0000" size=2><input type="text" value="<?php echo $dia_venc_m?>" name="diavenc" id="diavenc" size="1" maxlength="2"></font>
 <input type="submit" class="input" value="Gravar" />
 </form>
 </td>
@@ -959,7 +971,7 @@ Listar exclusões desta conta.</center>
 
 <table cellpadding="5" cellspacing="0" width="1000" align="center">
 <tr>
-<td colspan="2">
+<td colspan="3">
     <div style="float:right; text-align:right">
 <form name="form_filtro_cat" method="get" action=""  >
 <input type="hidden" name="mes" value="<?php echo $mes_hoje?>" >
@@ -967,8 +979,8 @@ Listar exclusões desta conta.</center>
     <b>Filtrar por categoria:</b>  <select name="filtro_cat" onchange="form_filtro_cat.submit()">
 <option value="">Tudo</option>
 <?php
-$qr=mysql_query("SELECT DISTINCT c.id, c.nome FROM categorias c, movimentos m WHERE m.cat=c.id && c.usuario='$usuario' && m.mes=$mes_hoje && m.ano=$ano_hoje && m.conta=3 ORDER BY c.nome");
-while ($row=mysql_fetch_array($qr)){
+$qr=mysqli_query($_SG['conexao'], "SELECT DISTINCT c.id, c.nome FROM categorias c, movimentos m WHERE m.cat=c.id && c.usuario='$usuario' && m.mes=$mes_hoje && m.ano=$ano_hoje && m.conta=3 ORDER BY c.nome");
+while ($row=mysqli_fetch_array($qr)){
 ?>
 <option <?php if (isset($_GET['filtro_cat']) && $_GET['filtro_cat']==$row['id'])echo "selected=selected"?> value="<?php echo $row['id']?>"><?php echo $row['nome']?></option>
 <?php }?>
@@ -990,12 +1002,12 @@ if (isset($_GET['filtro_cat'])){
 	if ($_GET['filtro_cat']!=''){	
 		$filtros="&& cat='".$_GET['filtro_cat']."'";
                 
-                $qr=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo=1 && conta=3 && usuario='$usuario' && mes='$mes_hoje' && ano='$ano_hoje' $filtros");
-                $row=mysql_fetch_array($qr);
+                $qr=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo=1 && conta=3 && usuario='$usuario' && mes='$mes_hoje' && ano='$ano_hoje' $filtros");
+                $row=mysqli_fetch_array($qr);
                 $entradas=$row['total'];
 
-                $qr=mysql_query("SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=3 && usuario='$usuario' && mes='$mes_hoje' && ano='$ano_hoje' $filtros");
-                $row=mysql_fetch_array($qr);
+                $qr=mysqli_query($_SG['conexao'], "SELECT SUM(valor) as total FROM movimentos WHERE tipo=0 && conta=3 && usuario='$usuario' && mes='$mes_hoje' && ano='$ano_hoje' $filtros");
+                $row=mysqli_fetch_array($qr);
                 $saidas=$row['total'];
 
                 $resultado_mes=$entradas-$saidas;
@@ -1003,14 +1015,14 @@ if (isset($_GET['filtro_cat'])){
         }
 }
 
-$qr=mysql_query("SELECT * FROM movimentos WHERE conta=3 && usuario='$usuario' && mes='$mes_hoje' && ano='$ano_hoje' $filtros ORDER By dia");
+$qr=mysqli_query($_SG['conexao'], "SELECT * FROM movimentos WHERE conta=3 && usuario='$usuario' && mes='$mes_hoje' && ano='$ano_hoje' $filtros ORDER By dia");
 $cont=0;
-while ($row=mysql_fetch_array($qr)){
+while ($row=mysqli_fetch_array($qr)){
 $cont++;
 
 $cat=$row['cat'];
-$qr2=mysql_query("SELECT nome FROM categorias WHERE id='$cat'");
-$row2=mysql_fetch_array($qr2);
+$qr2=mysqli_query($_SG['conexao'], "SELECT nome FROM categorias WHERE id='$cat'");
+$row2=mysqli_fetch_array($qr2);
 $categoria=$row2['nome'];
 
 ?>
@@ -1022,7 +1034,7 @@ $(function () {
 </script>
 <tr style="background-color:<?php if ($cont%2==0) echo "#F1F1F1"; else echo "#E0E0E0"?>" >
 <td align="center" width="15"><?php echo $row['dia']?></td>
-<td><?php echo $row['descricao']?> <?php if($row['parcelas']>=2) echo 'Parcela'?> <?php if($row['parcelas']>=2) echo $row['nparcela']?><?php if($row['parcelas']>=2) echo '/'?><?php if($row['parcelas']>=2) echo $row['parcelas']?> <em>(<a href="?mes=<?php echo $mes_hoje?>&ano=<?php echo $ano_hoje?>&filtro_cat=<?php echo $cat?>"><?php echo $categoria?></a>)</em> <a href="javascript:;" style="font-size:12px; color:#666" onclick="abreFecha('editar_mov_<?php echo $row['id']?>');" title="Editar">[editar]</a> <a href="javascript:;" style="font-size:12px; color:#666" onclick="abreFecha('hist_mov_<?php echo $row['id']?>');" title="Ver histórico"> [Histórico]</a><br>
+<td><?php echo $row['descricao']?> <?php $parcelas=$row['parcelas']; $nparcelas=$row['nparcela']; if($parcelas>=2) echo "Parcela ".$nparcelas."/".$parcelas."."?> <em>(<a href="?mes=<?php echo $mes_hoje?>&ano=<?php echo $ano_hoje?>&filtro_cat=<?php echo $cat?>"><?php echo $categoria?></a>)</em> <a href="javascript:;" style="font-size:12px; color:#666" onclick="abreFecha('editar_mov_<?php echo $row['id']?>');" title="Editar">[editar]</a> <a href="javascript:;" style="font-size:12px; color:#666" onclick="abreFecha('hist_mov_<?php echo $row['id']?>');" title="Ver histórico"> [Histórico]</a><br>
 </td>
 <td align="right"><strong style="color:<?php if ($row['tipo']==0) echo "#C00"; else echo "rgba(4, 45, 191, 1)"?>"><?php echo formata_dinheiro($row['valor'])?></strong></td>
 </tr>
@@ -1040,8 +1052,8 @@ $(function () {
             <b>Categoria:</b>
 <select name="cat">
 <?php
-$qr2=mysql_query("SELECT * FROM categorias where usuario='$usuario' ORDER BY nome");
-while ($row2=mysql_fetch_array($qr2)){
+$qr2=mysqli_query($_SG['conexao'], "SELECT * FROM categorias where usuario='$usuario' ORDER BY nome");
+while ($row2=mysqli_fetch_array($qr2)){
 ?>
     <option <?php if($row2['id']==$row['cat']) echo "selected"?> value="<?php echo $row2['id']?>"><?php echo $row2['nome']?></option>
 <?php }?>
@@ -1063,12 +1075,12 @@ while ($row2=mysql_fetch_array($qr2)){
 <td>
 <?php
 $id=$row['id'];
-$hist=mysql_query("SELECT * FROM historico WHERE id_mov = '$id' ORDER BY id");
-$qrhist=mysql_query("SELECT j.just, h.data, h.id FROM (just_ed j INNER JOIN historico h ON j.id = h.just_id) INNER JOIN movimentos g ON h.id_mov = g.id && g.id = '$id' ORDER BY h.id");
+$hist=mysqli_query($_SG['conexao'], "SELECT * FROM historico WHERE id_mov = '$id' ORDER BY id");
+$qrhist=mysqli_query($_SG['conexao'], "SELECT j.just, h.data, h.id FROM (just_ed j INNER JOIN historico h ON j.id = h.just_id) INNER JOIN movimentos g ON h.id_mov = g.id && g.id = '$id' ORDER BY h.id");
 
-if (mysql_num_rows($hist)!==0){
+if (mysqli_num_rows($hist)!==0){
 echo "Histórico de alterações:" ."<br>";
-while ($rowhist = mysql_fetch_array($qrhist)){
+while ($rowhist = mysqli_fetch_array($qrhist)){
 echo date('d/m/y', strtotime($rowhist['data'])) ."  -  " .$rowhist['just'] ."<br>";
 }
 }
