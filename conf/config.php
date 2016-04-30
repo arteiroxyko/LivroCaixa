@@ -16,7 +16,7 @@ $_SG['validaSempre'] = false;       // Evitar que, ao mudar os dados do usuário
 // Informe os dados para conexão com o seu banco de dados.
 $_SG['servidor'] = 'localhost';    // Servidor MySQL
 $_SG['usuario'] = 'root';          // Usuário MySQL
-$_SG['senha'] = 'thordb';          // Senha MySQL
+$_SG['senha'] = '';          // Senha MySQL
 $_SG['banco'] = 'livrocaixa';         // Banco de dados MySQL
 $_SG['paginaLogin'] = './login.php'; // Página de login
 $_SG['tabela'] = 'usuarios';       // Nome da tabela do db onde os usuários são cadastrados.
