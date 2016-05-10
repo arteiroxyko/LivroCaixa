@@ -17,11 +17,16 @@ if (isset($_GET['acao']) && $_GET['acao'] == 'apagar') {
     $catmov=$logexc['cat'];
     $contamov=$logexc['conta'];
     $dataexc = date("Ymd");
-	
-    mysqli_query($_SG['conexao'], "INSERT INTO exclusoes (id_mov_exc,tipo_mov,desc_mov,valor_mov,cat_mov,conta_mov,data_exc,usuario_mov) values ('$idmov','$tipomov','$descmov','$valormov','$catmov','$contamov','$dataexc','$usuario')");
+	$id_comp_img=$logexc['comp_img'];
+
+    mysqli_query($_SG['conexao'],"INSERT INTO exclusoes (id_mov_exc,tipo_mov,desc_mov,valor_mov,cat_mov,conta_mov,data_exc,usuario_mov) values ('$idmov','$tipomov','$descmov','$valormov','$catmov','$contamov','$dataexc','$usuario')");
     mysqli_query($_SG['conexao'], "DELETE FROM movimentos WHERE id='$id'");
     mysqli_query($_SG['conexao'], "DELETE FROM historico WHERE id_mov='$id'");
-    echo mysqli_error($_SG['conexao']);
+	$qr1=mysqli_query($_SG['conexao'], "SELECT * FROM movimentos WHERE comp_img='$id_comp_img'");
+	$row1=mysqli_fetch_array($qr1);
+	if (empty($row1)){
+		mysqli_query($_SG['conexao'], "DELETE FROM comprovantes WHERE id='$id_comp_img'");
+	}
     header("Location: ?mes=" . $_GET['mes'] . "&ano=" . $_GET['ano'] . "&ok=2");
     exit();
 }
@@ -56,6 +61,19 @@ if (isset($_GET['acao']) && $_GET['acao'] == 'apagar_cat') {
 
 //Editar movimentos
 if (isset($_POST['acao']) && $_POST['acao'] == 'editar_mov') {
+	$file_tmp = $_FILES["file"]["tmp_name"];
+	$file_name = $_FILES["file"]["name"];
+	$file_type = $_FILES["file"]["type"];
+	$file_size = $_FILES["file"]["size"];
+	$dataimagen=date('dmyHi');
+	$nome_r1 = tirarAcentos($file_name);
+    $nome_r2 = str_replace(" ", "", $nome_r1);
+	$nome="$usuario.$dataimagen.$nome_r2";
+	$caminho="./upload_temp/$usuario.$dataimagen.$nome_r2";
+	$extensao = @strtolower(end(explode('.',$file_name)));
+	$extesoespermitidas= array('png','jpeg','jpg','bmp','pdf','doc','docx','xls','xlsx','html','xml','rar','zip');
+	$tamanhoemBytes=@round (($file_size / 1024) / 1024,2);
+	$tamanhoemMB=$tamanhoemBytes." MB";
     $id = $_POST['id'];
     $dia = $_POST['dia'];
     $mes = $_POST['mes'];
@@ -68,6 +86,7 @@ if (isset($_POST['acao']) && $_POST['acao'] == 'editar_mov') {
     $dataed = date("Ymd");
 	$qred=mysqli_query($_SG['conexao'], "SELECT * FROM movimentos WHERE id='$id'");
 	$rowed=mysqli_fetch_array($qred);
+	$comp_cad=$rowed['comp_img'];
 
 if (empty($valor)){ 
 echo "<script>
@@ -114,8 +133,53 @@ exit();
     mysqli_query($_SG['conexao'], "UPDATE movimentos SET dia='$dia', mes='$mes', ano='$ano', tipo='$tipo', cat='$cat', conta='$conta_lan', descricao='$descricao', valor='$valor', edicao='Editado' WHERE id='$id'");
 	mysqli_query($_SG['conexao'], "INSERT INTO historico (id_mov,just_id,data,conta_mov,usuario) values ('$id','8','$dataed','$conta_lan','$usuario')");
     echo mysqli_error($_SG['conexao']);}
-    header("Location: ?mes=" . $_GET['mes'] . "&ano=" . $_GET['ano'] . "&ok=3");
-    exit();
+	
+    if (!empty($file_tmp)){
+		if (array_search($extensao, $extesoespermitidas) === false) {
+			echo "<script>
+			alert('São permitidos apenas arquivos nestes formatos: PNG, JPEG, PNG, BMP, PDF, DOC, DOCX, XLS, XLSX, HTML, XML, ZIP e RAR.'); location.href='master.php';
+			</script>";
+			exit();
+		}
+		if ($file_size>7340032){ 
+			echo "<script>
+			alert('O arquivo é muito grande. Tamanho maxímo 7Mb.'); location.href='master.php';
+			</script>";
+			exit();
+		}
+		if (empty($comp_cad)){
+			copy($file_tmp, "$caminho");
+			$fp = fopen($caminho, "rb");
+			$filename=fread($fp, $file_size);
+			$filename=addslashes($filename);
+			fclose($fp);
+			mysqli_query($_SG['conexao'], "INSERT INTO comprovantes (comp, nome, tipo, ext, tamanho) values ('$filename','$nome','$file_type','$extensao','$tamanhoemMB')");
+			unlink($caminho);
+			
+			$dados=mysqli_query($_SG['conexao'], "SELECT * FROM comprovantes WHERE id=(SELECT MAX(id) FROM comprovantes)");
+			$dados2=mysqli_fetch_array($dados);
+			$id_img=$dados2['id'];
+			mysqli_query($_SG['conexao'], "UPDATE movimentos SET edicao='Editado', comp_img='$id_img' WHERE id='$id'");
+			mysqli_query($_SG['conexao'], "INSERT INTO historico (id_mov,just_id,data,conta_mov,usuario) values ('$id','9','$dataed','$conta_lan','$usuario')");
+
+			header("Location: ?mes=" . $_GET['mes'] . "&ano=" . $_GET['ano'] . "&ok=1");
+			exit();
+		}
+		
+		copy($file_tmp, "$caminho");
+		$fp = fopen($caminho, "rb");
+		$filename=fread($fp, $file_size);
+		$filename=addslashes($filename);
+		fclose($fp);
+		mysqli_query($_SG['conexao'], "UPDATE comprovantes SET comp='$filename', nome='$nome', tipo='$file_type', ext='$extensao', tamanho='$tamanhoemMB' WHERE id='$comp_cad'");
+		unlink($caminho);
+		mysqli_query($_SG['conexao'], "UPDATE movimentos SET edicao='Editado' WHERE id='$id'");
+		mysqli_query($_SG['conexao'], "INSERT INTO historico (id_mov,just_id,data,conta_mov,usuario) values ('$id','9','$dataed','$conta_lan','$usuario')");
+
+		header("Location: ?mes=" . $_GET['mes'] . "&ano=" . $_GET['ano'] . "&ok=1");
+		exit();
+	}
+
 }
 
 //Cadastar categorias
@@ -130,6 +194,19 @@ if (isset($_POST['acao']) && $_POST['acao'] == 2) {
 
 //Lançar movimentos
 if (isset($_POST['acao']) && $_POST['acao'] == 1) {
+	$file_tmp = $_FILES["file"]["tmp_name"];
+	$file_name = $_FILES["file"]["name"];
+	$file_type = $_FILES["file"]["type"];
+	$file_size = $_FILES["file"]["size"];
+	$dataimagen=date('dmyHi');
+	$nome_r1 = tirarAcentos($file_name);
+    $nome_r2 = str_replace(" ", "", $nome_r1);
+	$nome="$usuario.$dataimagen.$nome_r2";
+	$caminho="./upload_temp/$usuario.$dataimagen.$nome_r2";
+	$extensao = @strtolower(end(explode('.',$file_name)));
+	$extesoespermitidas= array('png','jpeg','jpg','bmp','pdf','doc','docx','xls','xlsx','html','xml','rar','zip');
+	$tamanhoemBytes=@round (($file_size / 1024) / 1024,2);
+	$tamanhoemMB=$tamanhoemBytes." MB";
     $data = $_POST['data'];
     $tipo = $_POST['tipo'];
     $cat = $_POST['cat'];
@@ -150,9 +227,47 @@ alert('O campo VALOR é obrigatório, e precisa ser diferente de zero.'); locati
 exit();
 }
 	$n=1;
+	if (!empty($file_tmp)){
+		if (array_search($extensao, $extesoespermitidas) === false) {
+			echo "<script>
+			alert('São permitidos apenas arquivos nestes formatos: PNG, JPEG, PNG, BMP, PDF, DOC, DOCX, XLS, XLSX, HTML, XML, ZIP e RAR.'); location.href='master.php';
+			</script>";
+			exit();
+		}
+		if ($file_size>7340032){ 
+			echo "<script>
+			alert('O arquivo é muito grande. Tamanho maxímo 7Mb.'); location.href='master.php';
+			</script>";
+			exit();
+		}
+		copy($file_tmp, "$caminho");
+		$fp = fopen($caminho, "rb");
+		$filename=fread($fp, $file_size);
+		$filename=addslashes($filename);
+		fclose($fp);
+		mysqli_query($_SG['conexao'], "INSERT INTO comprovantes (comp, nome, tipo, ext, tamanho) values ('$filename','$nome','$file_type','$extensao','$tamanhoemMB')");
+		unlink($caminho);
+		
+	while ($n <= $parcelas) {
+	$dados=mysqli_query($_SG['conexao'], "SELECT * FROM comprovantes WHERE id=(SELECT MAX(id) FROM comprovantes)");
+	$dados2=mysqli_fetch_array($dados);
+	$id_img=$dados2['id'];
+    mysqli_query($_SG['conexao'], "INSERT INTO movimentos (dia,mes,ano,tipo,descricao,valor,cat,conta,nparcela,parcelas,usuario,comp_img) values ('$dia','$mes','$ano','$tipo','$descricao','$valor','$cat','3','$n','$parcelas','$usuario','$id_img')");
+
+    header("Location: ?mes=" . $_GET['mes'] . "&ano=" . $_GET['ano'] . "&ok=1");
+	if ($mes<=11){
+	$mes++;}
+	else{
+	$mes = 1;
+	$ano++;}
+	$n++;
+	}
+	exit();
+	}
+
 	while ($n <= $parcelas) {
     mysqli_query($_SG['conexao'], "INSERT INTO movimentos (dia,mes,ano,tipo,descricao,valor,cat,conta,nparcela,parcelas,usuario) values ('$dia','$mes','$ano','$tipo','$descricao','$valor','$cat','3','$n','$parcelas','$usuario')");
-    echo mysqli_error($_SG['conexao']);
+
     header("Location: ?mes=" . $_GET['mes'] . "&ano=" . $_GET['ano'] . "&ok=1");
 	if ($mes<=11){
 	$mes++;}
@@ -753,7 +868,7 @@ if (mysqli_num_rows($qr)==0)
 
 else{
 ?>
-<form id="formulario_lancamento" method="post" action="?mes=<?php echo $mes_hoje?>&ano=<?php echo $ano_hoje?>">
+<form id="formulario_lancamento" enctype="multipart/form-data" method="post" action="?mes=<?php echo $mes_hoje?>&ano=<?php echo $ano_hoje?>">
 <input type="hidden" name="acao" value="1" />
 <strong>Data: </strong>
 <input type="text" name="data" size="11" maxlength="10" value="<?php echo date('d')?>/<?php echo date('m')?>/<?php echo date('Y')?>" />
@@ -784,6 +899,8 @@ while ($row=mysqli_fetch_array($qr)){
 &nbsp;  |  &nbsp;
 <strong>Parcelas:</strong>
 <font color="#FF0000" size=2><input type="text" value="1" name="parcelas" size="2" maxlength="4" id="parcelas"/></font>
+
+<strong>Comprovante: </strong><input id="file" name="file" type="file" />
 
 <br />
 <br />
@@ -1025,6 +1142,7 @@ $qr2=mysqli_query($_SG['conexao'], "SELECT nome FROM categorias WHERE id='$cat'"
 $row2=mysqli_fetch_array($qr2);
 $categoria=$row2['nome'];
 
+$comprovante=$row['comp_img']
 ?>
 <script>
 $(function () {
@@ -1034,14 +1152,14 @@ $(function () {
 </script>
 <tr style="background-color:<?php if ($cont%2==0) echo "#F1F1F1"; else echo "#E0E0E0"?>" >
 <td align="center" width="15"><?php echo $row['dia']?></td>
-<td><?php echo $row['descricao']?> <?php $parcelas=$row['parcelas']; $nparcelas=$row['nparcela']; if($parcelas>=2) echo "Parcela ".$nparcelas."/".$parcelas."."?> <em>(<a href="?mes=<?php echo $mes_hoje?>&ano=<?php echo $ano_hoje?>&filtro_cat=<?php echo $cat?>"><?php echo $categoria?></a>)</em> <a href="javascript:;" style="font-size:12px; color:#666" onclick="abreFecha('editar_mov_<?php echo $row['id']?>');" title="Editar">[editar]</a> <a href="javascript:;" style="font-size:12px; color:#666" onclick="abreFecha('hist_mov_<?php echo $row['id']?>');" title="Ver histórico"> [Histórico]</a><br>
+<td><?php echo $row['descricao']?> <?php $parcelas=$row['parcelas']; $nparcelas=$row['nparcela']; if($parcelas>=2) echo "Parcela ".$nparcelas."/".$parcelas."."?> <em>(<a href="?mes=<?php echo $mes_hoje?>&ano=<?php echo $ano_hoje?>&filtro_cat=<?php echo $cat?>"><?php echo $categoria?></a>)</em><?php if (empty($comprovante)) echo ""; else echo "<a href=./upload_temp/download.php?id=$comprovante style=font-size:12px> [Comprovante]</a>"?> <a href="javascript:;" style="font-size:12px; color:#666" onclick="abreFecha('editar_mov_<?php echo $row['id']?>');" title="Editar">[editar]</a> <a href="javascript:;" style="font-size:12px; color:#666" onclick="abreFecha('hist_mov_<?php echo $row['id']?>');" title="Ver histórico"> [Histórico]</a><br>
 </td>
 <td align="right"><strong style="color:<?php if ($row['tipo']==0) echo "#C00"; else echo "rgba(4, 45, 191, 1)"?>"><?php echo formata_dinheiro($row['valor'])?></strong></td>
 </tr>
     <tr style="display:none; background-color:<?php if ($cont%2==0) echo "#F1F1F1"; else echo "#E0E0E0"?>" id="editar_mov_<?php echo $row['id']?>">
         <td colspan="3">
             <hr/>
-            <form method="post" action="?mes=<?php echo $mes_hoje?>&ano=<?php echo $ano_hoje?>">
+            <form enctype="multipart/form-data" method="post" action="?mes=<?php echo $mes_hoje?>&ano=<?php echo $ano_hoje?>">
             <input type="hidden" name="acao" value="editar_mov" />
             <input type="hidden" name="id" value="<?php echo $row['id']?>" />
                         
@@ -1061,7 +1179,9 @@ while ($row2=mysqli_fetch_array($qr2)){
             <b>Descricao:</b> <input type="text" name="descricao" value="<?php echo $row['descricao']?>" size="90" maxlength="255" />
          <br /><br />
             <b>Valor:</b> R$  <input type=text id="<?php echo $row['id']?>" value="<?php echo $row['valor']?>" name=valor length=15 onKeyPress="return(FormataReais(this,'.',',',event))">
-			&nbsp; | &nbsp;<b>Conta:</b><input type="radio" name="conta" value="1" <?php if($row['conta']==1) echo "checked"?> /> Conta Corrente &nbsp;<input type="radio" name="conta" value="2" <?php if($row['conta']==2) echo "checked"?> />Cartão Visa &nbsp;<input type="radio" name="conta" value="3" <?php if($row['conta']==3) echo "checked"?> />Cartão Master&nbsp;&nbsp; | &nbsp;            
+			&nbsp; | &nbsp;<b>Conta:</b><input type="radio" name="conta" value="1" <?php if($row['conta']==1) echo "checked"?> /> Conta Corrente &nbsp;<input type="radio" name="conta" value="2" <?php if($row['conta']==2) echo "checked"?> />Cartão Visa &nbsp;<input type="radio" name="conta" value="3" <?php if($row['conta']==3) echo "checked"?> />Cartão Master
+			<br><br>
+			<strong>Comprovante: </strong><input id="file" name="file" type="file"/> &nbsp;  |  &nbsp;             
             <input type="submit" class="input" value="Gravar" />
             </form> 
             <div style="text-align: right">
